@@ -24,7 +24,7 @@ export class AuthService {
                     field: 'login',
                     message: "A user does not exists."
                 }
-            ], HttpStatus.BAD_REQUEST);
+            ]);
         }
 
         const plainUser = user.get({ plain: true });
@@ -36,7 +36,7 @@ export class AuthService {
                     field: 'password',
                     message: "A password is not correct."
                 }
-            ], HttpStatus.BAD_REQUEST);
+            ]);
         }
 
         return this.generateToken(plainUser);
@@ -50,7 +50,7 @@ export class AuthService {
                     field: 'login',
                     message: "A user with this login exists."
                 }
-            ], HttpStatus.BAD_REQUEST);
+            ]);
         }
 
         const existedEmail = await this.userService.findOne({ email: userDto.email});
@@ -60,7 +60,7 @@ export class AuthService {
                     field: "email",
                     message: "A user with this email address exists."
                 }
-            ], HttpStatus.BAD_REQUEST);
+            ]);
         }
 
         const hash = await bcrypt.hash(userDto.password, 5);

@@ -41,6 +41,27 @@ export class SongsService {
 
 	constructor(private readonly storageService: StorageService) { }
 
+	async findOne(currentUserId: number | null, options: Partial<SongDto>) {
+		const query = {
+			where: { ...options },
+			include: this.songInclude,
+		};
+
+		if (currentUserId) return await Song.scope(Song.withOwnership(currentUserId)).findOne(query);
+		return await Song.findOne(query);
+	}
+
+	async findMany(currentUserId: number | null, options: Partial<SongDto>, limit = 10) {
+		const query = {
+			where: { ...options },
+			include: this.songInclude,
+			limit
+		};
+
+		if(currentUserId) return await Song.scope(Song.withOwnership(currentUserId)).findAll(query);
+		return await Song.findAll(query);
+	}
+
 
 	async uploadAndCreate(currentUserId: number, createSongDto: UploadSongDto, file: Express.Multer.File) {
 		const metadata = await getAudioMetadata(file);
@@ -56,26 +77,24 @@ export class SongsService {
 			url,
 		};
 
-		await this.create({
-			...createSongDto, ...fileData,
-			artist_id: currentUserId,
-			duration: Math.floor(metadata.format.duration || 0)
-		});
+		return await this.create(
+			{
+				...createSongDto, ...fileData,
+				artist_id: currentUserId,
+				duration: Math.floor(metadata.format.duration || 0)
+			}
+		);
 	}
 
 	async create(createSongDto: CreateSongDto) {
-		return await Song.create(createSongDto);
-	}
-
-	async findOne(options: Partial<SongDto>) {
-		return await Song.findOne({
-			where: { ...options },
+		const song = await Song.create(createSongDto);
+		return await Song.scope(Song.withOwnership(createSongDto.artist_id)).findByPk(song.id, {
 			include: this.songInclude
-		});
+		})
 	}
 
-	async findSongByTitle(title: string, limit: number = 8) {
-		return await Song.findAll({
+	async findSongByTitle(currentUserId: number, title: string, limit: number = 8) {
+		return await Song.scope(Song.withOwnership(currentUserId)).findAll({
 			where: {
 				title: {
 					[Op.iLike]: `%${title}%`

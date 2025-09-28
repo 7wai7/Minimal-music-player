@@ -8,14 +8,18 @@ import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@ne
 @Controller()
 export class AppController {
     constructor(private readonly appService: AppService) { }
+
+    @Get()
+    getHello(): string {
+        return "Hello World!";
+    }
     
-    @ApiTags('App')
     @ApiBearerAuth()
     @ApiOperation({ summary: 'Search music by term' })
     @ApiParam({ name: 'searchTerm', type: String, description: 'Term to search for' })
     @ApiResponse({ status: 200, description: 'Search results returned successfully.' })
     @ApiResponse({ status: 401, description: 'Unauthorized.' })
-    @Get()
+    @Get('/search')
     @UseGuards(JwtAuthGuard)
     search(@Param('searchTerm') searchTerm: string, @ReqUser() user: UserDto) {
         return this.appService.search(user.id, searchTerm);

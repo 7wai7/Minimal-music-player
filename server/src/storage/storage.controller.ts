@@ -13,8 +13,8 @@ export class StorageController {
         summary: 'Завантаження файлів клієнту від Google Cloud Storage'
     })
     @ApiQuery({
-        name: 'filename',
-        description: 'Назва файлу в GCS получена із url файлу',
+        name: 'url',
+        description: 'Посилання файлу в GCS',
         type: 'string',
         example: '70749b53-12b7-445b-bf11-3213d12b1221.txt'
     })
@@ -33,10 +33,10 @@ export class StorageController {
     @Get('/download')
     @UseGuards(JwtAuthGuard)
     async getDownloadLink(
-        @Query('filename') filename: string,
+        @Query('url') url: string,
         @Query('originalname') originalname: string
     ) {
-        return this.storageService.getDownloadLink(filename, originalname);
+        return this.storageService.getDownloadLink(url, originalname);
     }
 
 

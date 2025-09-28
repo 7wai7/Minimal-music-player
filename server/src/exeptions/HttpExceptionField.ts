@@ -6,8 +6,9 @@ export default class HttpExceptionField extends HttpException {
             field: string,
             message: string
         }[],
+        message = "Validation error",
         status: HttpStatus = HttpStatus.BAD_REQUEST
     ) {
-        super({ errors }, status);
+        super({ errors, message }, status);
     }
 }

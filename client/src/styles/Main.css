@@ -1,0 +1,25 @@
+.page-content {
+    height: 2000px;
+    background-color: rgba(0, 0, 255, 0.256);
+}
+
+.artists-title,
+.songs-title {
+    color: white;
+    font-weight: 500;
+    margin: 70px 20px 20px;
+}
+
+.songs-title {
+    margin: 20px 20px 20px;
+}
+
+.artists-list-wrapper {
+    overflow-x: hidden;
+}
+
+.artists-container {
+    margin: 0 20px;
+    display: flex;
+    flex-direction: row;
+}

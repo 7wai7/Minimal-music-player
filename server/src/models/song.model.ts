@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Column, DataType, ForeignKey, Model, Sequelize, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, ForeignKey, Model, Sequelize, Table } from "sequelize-typescript";
 import { User } from "./user.model";
 
 interface CreationAttrs {
@@ -63,4 +63,7 @@ export class Song extends Model<Song, CreationAttrs> {
             }
         };
     }
+
+    @BelongsTo(() => User, { as: 'artist' })
+    artist: User;
 }

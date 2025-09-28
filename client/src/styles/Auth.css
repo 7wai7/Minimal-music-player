@@ -1,0 +1,120 @@
+.auth-form {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 600px;
+    aspect-ratio: 1 / 1;
+    padding: 40px;
+    border-radius: 10px;
+    background: linear-gradient(180deg, #efefef 0%, #9d9d9d 100%);
+    box-shadow: inset 2px 0 1px 0 #fff, inset 0 2px 1px 0 #fff, 1px 0 1px 0 #545454, 0 3px 1px 0 #545454;
+}
+
+.auth-form .form-inputs {
+    width: 40%;
+    max-width: 40%;
+}
+
+.input-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 8px 12px;
+    font-size: .9em;
+    border-radius: 4px;
+    background: #fff;
+    box-shadow: var(--3d-box-negative-inner);
+    border: none;
+    outline: none;
+}
+
+.input-wrapper input.error {
+    border: 2px solid red;
+}
+
+.input-wrapper .error-message {
+    color: red;
+    font-size: .8em;
+    margin-top: 4px;
+}
+
+
+.form-actions {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.form-actions .toggle-auth-mode-btn {
+    font-family: "Inter", sans-serif;
+    text-decoration: underline;
+    font-weight: 500;
+    font-size: 12px;
+    color: #4845ff;
+    text-shadow: 0px .5px .5px #484848;
+}
+
+.form-actions .submit-btn {
+    color: white;
+    font-size: 20px;
+    border-radius: 10px;
+    width: 200px;
+    height: 40px;
+    box-shadow: var(--3d-box-negative-inner);
+    background: var(--theme);
+}
+
+.form-actions .submit-btn[disabled] {
+    color: rgb(146 146 146);
+    background: rgb(90, 90, 90);
+}
+
+
+.auth-form .disc-img {
+    position: absolute;
+    border-radius: 50%;
+    overflow: hidden;
+    z-index: -1;
+    top: 1%;
+    left: 0%;
+    rotate: 20deg;
+    width: 98%;
+    aspect-ratio: 1 / 1;
+    pointer-events: none;
+    will-change: transform;
+    animation: show-disc 1s ease forwards;
+}
+
+.auth-form .disc-img.hide {
+    animation: hide-disc 1.5s ease forwards;
+}
+
+@keyframes show-disc {
+    from {
+        transform: rotate(-50deg);
+        left: 0%;
+    }
+
+    to {
+        transform: rotate(16deg);
+        left: 55%;
+    }
+}
+
+@keyframes hide-disc {
+    from {
+        transform: rotate(16deg);
+        left: 55%;
+    }
+
+    to {
+        transform: rotate(200deg);
+        left: 200%;
+    }
+}

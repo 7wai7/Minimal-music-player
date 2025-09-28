@@ -44,7 +44,7 @@ async function bootstrap() {
 				field: item.field,
 				message: item.messages.join(', ')
 			}));
-			throw new HttpException({ errors: formatted }, HttpStatus.BAD_REQUEST);
+			throw new HttpException({ errors: formatted, message: "Validation error" }, HttpStatus.BAD_REQUEST);
 		}
 	}));
 
@@ -61,8 +61,9 @@ async function bootstrap() {
 	const document = SwaggerModule.createDocument(app, config);
 	SwaggerModule.setup('/api/docs', app, document);
   
-	await app.listen(process.env.PORT ?? 3000, () => {
-		console.log("Server started")
+	const port = process.env.PORT || 3000;
+	await app.listen(port, () => {
+		console.log(`Server started on port ${port}`);
 	});
 }
 bootstrap();

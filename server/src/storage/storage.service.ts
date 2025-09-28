@@ -18,7 +18,7 @@ export class StorageService {
     }
 
 
-    async getDownloadLink(url: string, originalname: string) {
+    async getDownloadLink(url: string, originalname: string, mode: 'inline' | 'download' = 'download') {
         const bucket = this.storage.bucket(String(process.env.GCS_BUCKET_NAME));
         const filename = url.split('/').pop();
         if (!filename) {
@@ -29,7 +29,10 @@ export class StorageService {
             version: 'v4',
             action: 'read',
             expires: Date.now() + 5 * 60 * 1000, // 5 хвилин
-            responseDisposition: `attachment; filename="${originalname}"`
+            responseDisposition:
+                mode === 'download'
+                    ? `attachment; filename="${originalname}"`
+                    : 'inline'
         });
 
         return { url: downloadUrl };
@@ -52,7 +55,7 @@ export class StorageService {
             );
         }
 
-        
+
         try {
             const filesData: {
                 originalname: string,
@@ -108,7 +111,7 @@ export class StorageService {
     async deleteFilesByUrls(urls: string[]): Promise<void> {
         for (const url of urls) {
             const filename = url.split('/').pop();
-            if(filename) await this.deleteFile(filename);
+            if (filename) await this.deleteFile(filename);
         }
     }
 

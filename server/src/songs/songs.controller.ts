@@ -7,10 +7,29 @@ import { ApiBody, ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger
 import { JwtAuthGuard } from 'src/auth/jwt-auth.quard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadSongDto } from './dto/upload-song.dto';
+import { Auth } from 'src/decorators/Auth';
 
 @Controller('songs')
 export class SongsController {
 	constructor(private readonly songsService: SongsService) { }
+
+	@ApiOperation({ summary: 'Find song' })
+	@ApiResponse({ status: 200, description: 'The song has been successfully retrieved.' })
+	@UseGuards(JwtAuthGuard)
+	@Auth({ required: false })
+	@Get(':id')
+	findOne(@Param('id') id: string, @ReqUser() user?: UserDto) {
+		return this.songsService.findOne(user?.id ?? null, { id: +id });
+	}
+
+	@ApiOperation({ summary: 'Find songs' })
+	@ApiResponse({ status: 200, description: 'The songs has been successfully retrieved.' })
+	@UseGuards(JwtAuthGuard)
+	@Auth({ required: false })
+	@Get()
+	findMany(@Param('limit') limit?: string, @ReqUser() user?: UserDto) {
+		return this.songsService.findMany(user?.id ?? null, {}, limit ? +limit : 10);
+	}
 
 	@ApiOperation({ summary: 'Upload and create a new song with audio file' })
 	@ApiResponse({ status: 201, description: 'The song has been successfully uploaded and created.' })
@@ -52,15 +71,9 @@ export class SongsController {
 	@ApiResponse({ status: 201, description: 'The song has been successfully created.' })
 	@ApiResponse({ status: 400, description: 'Bad Request.' })
 	@ApiBody({ type: CreateSongDto })
+	@UseGuards(JwtAuthGuard)
 	@Post()
 	create(@Body() createSongDto: CreateSongDto, @ReqUser() user: UserDto) {
 		return this.songsService.create({ ...createSongDto, artist_id: user.id });
-	}
-
-	@ApiOperation({ summary: 'Find song' })
-	@ApiResponse({ status: 200, description: 'The song has been successfully retrieved.' })
-	@Get(':id')
-	findOne(@Param('id') id: string) {
-		return this.songsService.findOne({ id: +id });
 	}
 }

@@ -12,7 +12,7 @@ export class AppService {
 	async search(currentUserId: number, searchTerm: string) {
 		return [
 			...(await this.usersService.findUsersByLogin(currentUserId, searchTerm)),
-			...(await this.songsService.findSongByTitle(searchTerm))
+			...(await this.songsService.findSongByTitle(currentUserId, searchTerm))
 		];
 	}
 }

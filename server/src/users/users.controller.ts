@@ -22,6 +22,18 @@ export class UsersController {
 		return this.usersService.findOne({ id: +id });
 	}
 
+	@ApiOperation({ summary: 'Get users' })
+	@ApiParam({ name: 'limit', type: Number })
+	@ApiResponse({
+		status: 200,
+		description: 'The users has been successfully retrieved.',
+		type: [UserDto]
+	})
+	@Get()
+	findMany(@Param('limit') limit?: string) {
+		return this.usersService.findMany({ }, limit ? +limit : 10);
+	}
+
 	@ApiOperation({ summary: 'Find users by login' })
 	@ApiBearerAuth()
 	@ApiParam({ name: 'login', type: String, description: 'User login', required: false })

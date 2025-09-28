@@ -15,6 +15,14 @@ export class UsersService {
         return await User.findOne({ where: { ...options } });
     }
 
+    async findMany(options: { }, limit = 10) {
+        return await User.findAll({
+            where: { ...options },
+            attributes: ['id', 'login'],
+            limit
+        });
+    }
+
     async findUsersByLogin(currentUserId: number, login: string, limit: number = 8) {
         return await User.findAll({
             where: {

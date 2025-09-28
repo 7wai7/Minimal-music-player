@@ -46,6 +46,6 @@ export class User extends Model<User, UserCreationAttrs> {
 		type: () => [Song],
 		required: false
 	})
-	@HasMany(() => Song, { as: 'somgs' })
+	@HasMany(() => Song, { as: 'songs' })
 	songs: Song[];
 }
