@@ -1,7 +1,8 @@
 body {
   display: flex;
   flex-direction: column;
-  place-items: center;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   min-height: 100vh;
 }
@@ -11,7 +12,8 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  place-items: center;
+  align-items: center;
+  justify-content: center;
 }
 
 .main-background {
@@ -24,6 +26,12 @@ body {
 .page {
   position: relative;
   width: 100%;
+  background: #111828;
+}
+
+.page-content {
+  padding-top: var(--header-height);
+  padding-bottom: calc(var(--footer-height) + 40px);
 }
 
 .page-background {
@@ -37,6 +45,12 @@ body {
   font-weight: 500;
   color: red;
   text-align: center;
+}
+
+.icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .spin-animation {
@@ -92,4 +106,20 @@ body {
   100% {
     box-shadow: 20px 0px, -20px 0px
   }
+}
+
+.avatar-wrapper,
+.avatar-wrapper {
+  width: 100px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.avatar-wrapper.default {
+  background-color: #3a83f2;
+}
+
+.tr-bg {
+  transition: background-color .2s ease-in-out;
 }

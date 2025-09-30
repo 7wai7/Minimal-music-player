@@ -17,7 +17,7 @@ export class User extends Model<User, UserCreationAttrs> {
 		maxLength: 16
 	})
 	@Column({ type: DataType.STRING, unique: true, allowNull: false })
-	login: string;
+	declare login: string;
 
 
 	@ApiProperty({
@@ -26,7 +26,7 @@ export class User extends Model<User, UserCreationAttrs> {
 		format: 'email'
 	})
 	@Column({ type: DataType.STRING, unique: true, allowNull: false })
-	email: string;
+	declare email: string;
 
 
 	@ApiProperty({
@@ -37,7 +37,7 @@ export class User extends Model<User, UserCreationAttrs> {
 		writeOnly: true
 	})
 	@Column({ type: DataType.STRING, allowNull: false })
-	password: string;
+	declare password: string;
 
 
 

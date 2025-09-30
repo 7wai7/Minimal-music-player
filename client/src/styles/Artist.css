@@ -1,0 +1,36 @@
+.artist-page .page-top {
+    margin: 30px 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    gap: 30px;
+}
+
+.artist-page .page-top .meta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.artist-page .meta .name {
+    color: var(--theme);
+    font-size: 20px;
+}
+
+.artist-page .meta .songs-count {
+    color: var(--theme-2);
+    font-size: 16px;
+}
+
+.artist-page .avatar-wrapper {
+    width: 150px;
+}
+
+
+.artist-page .song-preview .song-title {
+    color: var(--theme-2) !important;
+}
+
+.artist-page .pagination-btns {
+    margin: 30px 20px;
+}

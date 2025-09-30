@@ -1,13 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UseInterceptors, UploadedFile, Query, HttpException, HttpStatus } from '@nestjs/common';
 import { SongsService } from './songs.service';
 import { CreateSongDto } from './dto/create-song.dto';
 import { ReqUser } from 'src/decorators/ReqUser';
 import { UserDto } from 'src/users/dto/user.dto';
-import { ApiBody, ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiOperation, ApiQuery, ApiResponse, getSchemaPath } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.quard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadSongDto } from './dto/upload-song.dto';
 import { Auth } from 'src/decorators/Auth';
+import { Op } from 'sequelize';
+import clean from 'src/utils/clean';
+import { SongDto } from './dto/song.dto';
 
 @Controller('songs')
 export class SongsController {
@@ -17,7 +20,7 @@ export class SongsController {
 	@ApiResponse({ status: 200, description: 'The song has been successfully retrieved.' })
 	@UseGuards(JwtAuthGuard)
 	@Auth({ required: false })
-	@Get(':id')
+	@Get('/by-id/:id')
 	findOne(@Param('id') id: string, @ReqUser() user?: UserDto) {
 		return this.songsService.findOne(user?.id ?? null, { id: +id });
 	}
@@ -29,6 +32,68 @@ export class SongsController {
 	@Get()
 	findMany(@Param('limit') limit?: string, @ReqUser() user?: UserDto) {
 		return this.songsService.findMany(user?.id ?? null, {}, limit ? +limit : 10);
+	}
+
+	@ApiOperation({ summary: 'Find songs' })
+	@ApiQuery({
+		name: 'page',
+		type: 'number',
+		example: '1'
+	})
+	@ApiQuery({
+		name: 'id',
+		type: 'number',
+		example: '1',
+		required: false
+	})
+	@ApiQuery({
+		name: 'login',
+		type: 'string',
+		example: 'user',
+		required: false
+	})
+	@ApiQuery({
+		name: 'limit',
+		type: 'number',
+		example: '10',
+		required: false
+	})
+	@ApiResponse({
+		status: 200,
+		description: 'The songs has been successfully retrieved.',
+		schema: {
+			type: 'object',
+			properties: {
+				count: { type: 'number', example: 100 },
+				rows: {
+					type: 'array',
+					items: { $ref: getSchemaPath(SongDto) }
+				}
+			}
+		}
+	})
+	@UseGuards(JwtAuthGuard)
+	@Auth({ required: false })
+	@Get('/artist')
+	findManyByArtist(
+		@Query('page') page: string,
+		@ReqUser() user?: UserDto,
+		@Query('id') id?: string,
+		@Query('login') login?: string,
+		@Query('limit') limit?: string
+	) {
+		if (!id && !login) throw new HttpException('Either id or login is required', HttpStatus.BAD_REQUEST);
+
+		return this.songsService.findManyByArtist(
+			user?.id ?? null,
+			{},
+			clean({
+				id: id ? +id : undefined,
+				login
+			}),
+			+page,
+			limit ? +limit : 10
+		);
 	}
 
 	@ApiOperation({ summary: 'Upload and create a new song with audio file' })

@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateSongDto } from './dto/create-song.dto';
 import { Song } from 'src/models/song.model';
 import { SongDto } from './dto/song.dto';
-import { Op } from 'sequelize';
+import { FindOptions, Op } from 'sequelize';
 import { User } from 'src/models/user.model';
 import { StorageService } from 'src/storage/storage.service';
 import { UploadSongDto } from './dto/upload-song.dto';
@@ -10,6 +10,8 @@ import { promises as fs } from 'fs';
 import * as path from 'path';
 import * as ffmpeg from 'fluent-ffmpeg';
 import ffprobeInstaller from '@ffprobe-installer/ffprobe';
+import { UserDto } from 'src/users/dto/user.dto';
+import { Sequelize } from 'sequelize-typescript';
 
 ffmpeg.setFfprobePath(ffprobeInstaller.path);
 
@@ -39,10 +41,13 @@ export class SongsService {
 		}
 	];
 
-	constructor(private readonly storageService: StorageService) { }
+	constructor(
+		private readonly storageService: StorageService,
+		@Inject(Sequelize) private readonly sequelize: Sequelize,
+	) { }
 
 	async findOne(currentUserId: number | null, options: Partial<SongDto>) {
-		const query = {
+		const query: FindOptions<Song> = {
 			where: { ...options },
 			include: this.songInclude,
 		};
@@ -52,14 +57,38 @@ export class SongsService {
 	}
 
 	async findMany(currentUserId: number | null, options: Partial<SongDto>, limit = 10) {
-		const query = {
+		const query: FindOptions<Song> = {
 			where: { ...options },
 			include: this.songInclude,
 			limit
 		};
 
-		if(currentUserId) return await Song.scope(Song.withOwnership(currentUserId)).findAll(query);
+		if (currentUserId) return await Song.scope(Song.withOwnership(currentUserId)).findAll(query);
 		return await Song.findAll(query);
+	}
+
+	async findManyByArtist(
+		currentUserId: number | null,
+		options: Partial<SongDto>,
+		artistOptions: Partial<UserDto>,
+		page = 1,
+		limit = 10
+	) {
+		const query: FindOptions<Song> = {
+			where: { ...options },
+			include: [{
+				model: User,
+				as: 'artist',
+				attributes: ['id', 'login'],
+				where: { ...artistOptions }
+			}],
+			order: [['created_at', 'DESC']],
+			offset: (page - 1) * limit,
+			limit
+		};
+
+		if (currentUserId) return await Song.scope(Song.withOwnership(currentUserId)).findAndCountAll(query);
+		return await Song.findAndCountAll(query);
 	}
 
 

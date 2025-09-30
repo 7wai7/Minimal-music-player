@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import "../styles/Header.css"
 import { useUser } from "../contexts/userContext";
+import { Search } from "lucide-react";
 
 function Header() {
     const { user } = useUser();
@@ -20,6 +21,14 @@ function Header() {
                             <span>Login</span>
                         </Link>
                 }
+                <button className="search-btn icon-wrapper">
+                    <Search
+                        size={16}
+                        color="var(--theme-2)"
+                        strokeLinecap="square"
+                        strokeLinejoin="miter"
+                    />
+                </button>
             </nav>
         </header>
     );

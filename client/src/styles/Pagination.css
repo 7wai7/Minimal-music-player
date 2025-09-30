@@ -1,0 +1,34 @@
+.pagination-btns {
+	width: min-content;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 6px;
+}
+
+.pagination-btns button {
+	background-color: var(--theme-2);
+	border-radius: 8px;
+	width: 36px;
+	height: 32px;
+}
+
+.pagination-btns .prev,
+.pagination-btns .next {
+	background-color: unset;
+}
+
+.pagination-btns .prev:hover,
+.pagination-btns .next:hover {
+	background-color: var(--theme-2);
+}
+
+.pagination-btns .prev[disabled],
+.pagination-btns .next[disabled] {
+	opacity: .5;
+	pointer-events: none;
+}
+
+.pagination-btns button.active {
+	background-color: var(--theme);
+}

@@ -12,4 +12,5 @@ export default interface SongDTO {
     size: number;
     extension: string;
     url: string;
+    created_at: string
 }

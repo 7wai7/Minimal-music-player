@@ -18,38 +18,38 @@ interface CreationAttrs {
 export class Song extends Model<Song, CreationAttrs> {
     @ForeignKey(() => User)
     @Column({ type: DataType.INTEGER, allowNull: false })
-    artist_id: number;
+    declare artist_id: number;
 
     @Column({ type: DataType.TEXT, allowNull: false })
-    title: string;
+    declare title: string;
 
     @Column({ type: DataType.TEXT })
-    lyrics: string;
+    declare lyrics: string;
 
     @Column({ type: DataType.DATE, allowNull: false, defaultValue: Sequelize.fn('NOW') })
-    release_date: Date;
+    declare release_date: Date;
 
     @Column({ type: DataType.TEXT, allowNull: false })
-    genre: string;
+    declare genre: string;
 
     @Column({ type: DataType.INTEGER, allowNull: false })
-    duration: number;
+    declare duration: number;
 
     @Column({ type: DataType.INTEGER, allowNull: false })
-    size: number;
+    declare size: number;
 
     @Column({ type: DataType.TEXT, allowNull: false })
-    extension: string;
+    declare extension: string;
 
     @Column({ type: DataType.TEXT, allowNull: false })
-    url: string;
+    declare url: string;
 
     @Column({ type: DataType.DATE, allowNull: false, defaultValue: Sequelize.fn('NOW') })
-    created_at: Date;
+    declare created_at: Date;
 
 
     @Column({ type: DataType.VIRTUAL })
-    isOwnSong: boolean;
+    declare isOwnSong: boolean;
 
     static withOwnership(currentUserId: number) {
         return {

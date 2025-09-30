@@ -1,28 +1,33 @@
 import { useQuery } from "@tanstack/react-query";
-import { songsFetch } from "../API/songs";
 import SongPreview from "./SongPreview";
 import Loader from "./Loader";
+import type SongDTO from "../types/song";
 
-function SongsContainer() {
+interface Props {
+    queryKey?: unknown[],
+    queryFn: (...arg0: any[]) => Promise<SongDTO[]>,
+    enabled?: boolean
+}
+
+function SongsContainer({
+    queryKey = [],
+    queryFn,
+    enabled = true
+}: Props) {
     const { data: songs = [], isLoading, error } = useQuery({
-        queryKey: ['songs'],
-        queryFn: () => {
-            return songsFetch(10);
-        },
+        queryKey: ["songs", ...queryKey],
+        queryFn: () => queryFn(),
+        enabled
     });
 
-    if (isLoading) return <Loader />
-    if (error) return (
-        <h2 className="fetch-error-message">
-            {error.message}
-        </h2>
-    )
+    if (isLoading) return <Loader />;
+    if (error) return <h2 className="fetch-error-message">{(error as Error).message}</h2>;
 
     return (
         <div className="songs-container">
-            {songs.map((s) => {
-                return <SongPreview key={s.id} song={s} />
-            })}
+            {songs.map((s) => (
+                <SongPreview key={s.id} song={s} />
+            ))}
         </div>
     );
 }

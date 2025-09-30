@@ -1,0 +1,41 @@
+
+
+input[type="range"] {
+  -webkit-appearance: none;
+  /* забрати стандартний стиль (Chrome/Safari/Edge) */
+  height: 8px;
+  background: linear-gradient(to right, var(--theme-2) 0%, var(--theme-2) 50%, #333 50%, #333 100%);
+  border-radius: 2px;
+  /* без скруглення */
+  outline: none;
+  cursor: pointer;
+}
+
+/* Chrome, Safari, Edge */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 6px;
+  height: 12px;
+  background: var(--theme);
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+/* Firefox */
+input[type="range"]::-moz-range-thumb {
+  width: 6px;
+  height: 12px;
+  background: var(--theme);
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+/* IE/Edge Legacy */
+input[type="range"]::-ms-thumb {
+  width: 6px;
+  height: 12px;
+  background: var(--theme);
+  border-radius: 2px;
+  cursor: pointer;
+}

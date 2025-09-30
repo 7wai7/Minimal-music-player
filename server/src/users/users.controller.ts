@@ -17,9 +17,23 @@ export class UsersController {
 		description: 'The user has been successfully retrieved.',
 		type: UserDto
 	})
-	@Get(':id')
-	findOne(@Param('id') id: string) {
+	@Get("/id/:id")
+	findOne(
+		@Param('id') id: string
+	) {
 		return this.usersService.findOne({ id: +id });
+	}
+
+	@ApiOperation({ summary: 'Get user by login' })
+	@ApiParam({ name: 'login', type: String, description: 'User login' })
+	@ApiResponse({
+		status: 200,
+		description: 'The user has been successfully retrieved.',
+		type: UserDto
+	})
+	@Get('/by-login/:login')
+	findOneByLogin(@Param('login') login: string) {
+		return this.usersService.findOne({ login });
 	}
 
 	@ApiOperation({ summary: 'Get users' })
@@ -43,15 +57,8 @@ export class UsersController {
 		type: UserDto
 	})
 	@UseGuards(JwtAuthGuard)
-	@Get('by-login')
+	@Get('find/by-login')
 	findUsersByLogin(@ReqUser() user: UserDto, @Param('login') login: string) {
 		return this.usersService.findUsersByLogin(user.id, login);
-	}
-
-	@ApiOperation({ summary: 'Create a new user' })
-	@ApiBody({ type: RegisterUserDto })
-	@Post()
-	create(@Body() createUserDto: RegisterUserDto) {
-		return this.usersService.create(createUserDto);
 	}
 }

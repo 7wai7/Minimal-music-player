@@ -8,6 +8,7 @@ import { Song } from './models/song.model';
 import { UsersModule } from './users/users.module';
 import { SongsModule } from './songs/songs.module';
 import { JwtModule } from '@nestjs/jwt';
+import { StorageModule } from './storage/storage.module';
 dotenv.config();
 
 @Module({
@@ -25,10 +26,12 @@ dotenv.config();
 			],
 			autoLoadModels: true,
 			synchronize: true,
+			logging: false
 		}),
 		UsersModule,
 		SongsModule,
-		JwtModule
+		JwtModule,
+		StorageModule
 	],
 	controllers: [AppController],
 	providers: [AppService],

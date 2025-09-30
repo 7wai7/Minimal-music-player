@@ -3,8 +3,19 @@
   line-height: 1.5;
   font-weight: 400;
 
-  --theme: linear-gradient(180deg, #ffe0a7 0%, #e0a841 62.02%);
+  --page-width: 1000px;
+  --header-height: 70px;
+  --footer-height: 90px;
+  --theme-rgb: 249, 116, 25;
+  --theme: rgb(249, 116, 25);
+  --theme-dark: #cc6013;
+  --theme-2: white;
+  --theme-2-dark: white;
+  --theme-3: #283142;
+  --theme-3-light: #7f8993;
   --theme-dark-color: #8d6927;
+  --3d-box-positive-theme: inset 1px 1px 1px 0 #fff, .5px 1px 0 0 var(--theme-dark-color);
+  --3d-box-positive-theme-white: inset 1px 1px 1px 0 #fff, .5px 1px 0 0 var(--theme-white);
   --3d-box-negative-inner: 0 -1px 1px 0 rgba(255, 255, 255, 0.3), inset 0 1px 1px 0 rgba(0, 0, 0, 0.5), 0 1px 1px 0 rgba(255, 255, 255, 0.3), -1px 0 1px 0 rgba(255, 255, 255, 0.3), 1px 0 1px 0 rgba(255, 255, 255, 0.3);
   --3d-text-negative-inner: 0 -1px 1px rgba(255, 255, 255, 0.3), 0 1px 1px rgba(0, 0, 0, 0.5), 0 1px 1px rgba(255, 255, 255, 0.3), -1px 0 1px rgba(255, 255, 255, 0.3), 1px 0 1px rgba(255, 255, 255, 0.3);
 }
@@ -23,4 +34,5 @@ button {
   background: none;
   border: none;
   cursor: pointer;
+  padding: 0;
 }

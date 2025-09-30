@@ -12,10 +12,13 @@ export class UsersService {
     }
 
     async findOne(options: Partial<UserDto>) {
-        return await User.findOne({ where: { ...options } });
+        return await User.findOne({
+            where: { ...options },
+            attributes: ['id', 'login']
+        });
     }
 
-    async findMany(options: { }, limit = 10) {
+    async findMany(options: {}, limit = 10) {
         return await User.findAll({
             where: { ...options },
             attributes: ['id', 'login'],

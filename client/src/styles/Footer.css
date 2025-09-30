@@ -1,0 +1,117 @@
+footer {
+    position: fixed;
+    width: var(--page-width);
+    bottom: 0;
+    height: var(--footer-height);
+    box-shadow: inset 0 2px 1px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(255, 255, 255, 0.15);
+    background: #1e2736d8;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 10px;
+    backdrop-filter: blur(10px);
+    border-top: 1px solid #2b3648;
+}
+
+.audio-slider-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    padding: 0 10px;
+}
+
+.audio-slider-wrapper .time {
+    font-size: 12px;
+    color: var(--theme-3-light);
+}
+
+.audio-slider {
+    width: 100%;
+}
+
+.audio-controllers {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin: auto 0;
+    padding: 0 10px;
+}
+
+.audio-btns {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.audio-btns .play-pause-btn {
+    margin: 0 12px;
+}
+
+.audio-btns .skip-btn,
+.audio-controllers .download-btn {
+    width: 40px;
+    height: 36px;
+    display: flex;
+    border-radius: 8px;
+}
+
+.audio-btns .skip-btn:hover,
+.audio-controllers .download-btn:hover {
+    background-color: white;
+}
+
+.audio-btns .skip-btn svg {
+    margin: auto;
+    stroke: var(--theme);
+}
+
+
+.volume-wrapper {
+    margin-left: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+}
+
+
+
+.audio-controllers .meta {
+    display: flex;
+    align-items: end;
+    gap: 0.5rem;
+}
+
+.audio-controllers .meta * {
+    color: white;
+    font-size: 18px;
+    line-height: 20px;
+    vertical-align: baseline;
+}
+
+.audio-controllers .meta .song-title {
+    color: var(--theme);
+    font-size: 16px;
+    vertical-align: baseline;
+}
+
+.audio-controllers .placeholder {
+    color: white;
+    font-size: 16px;
+}
+
+
+
+
+
+
+
+
+
+
+footer.disabled input,
+footer.disabled button {
+    opacity: 0.5;
+    pointer-events: none;
+}

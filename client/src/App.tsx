@@ -4,7 +4,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Auth from './pages/Auth'
 import { UserProvider } from './contexts/userContext';
 import Main from './pages/Main';
-import Page from './pages/Page';
+import Layout from './pages/Layout';
+import Artist from './pages/Artist';
 
 function App() {
 	return (
@@ -20,8 +21,13 @@ function App() {
 
 						<Route
 							path="/"
-							element={<Page children={<Main />}/>}
-						/>
+							element={
+								<Layout />
+							}
+						>
+							<Route index element={<Main />} />
+							<Route path='/artist/:login' element={<Artist />} />
+						</Route>
 					</Routes>
 				</UserProvider>
 			</BrowserRouter>

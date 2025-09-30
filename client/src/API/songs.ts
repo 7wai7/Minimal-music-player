@@ -22,11 +22,29 @@ export async function songsFetch(limit?: number): Promise<SongDTO[]> {
     )
 }
 
-export async function songsArtistFetch(id: number, limit?: number): Promise<SongDTO[]> {
+export async function songsArtistFetch({
+    id,
+    login,
+    limit,
+    page
+}: {
+    id?: number,
+    login?: string,
+    limit?: number,
+    page: number
+}): Promise<{
+    count: number,
+    rows: SongDTO[]
+}> {
+    if (!id && !login) throw Error('Either id or login is required');
+
     return fetcher(
-        api.get(`/api/songs/artist/${id}`, {
+        api.get(`/api/songs/artist`, {
             params: {
-                limit
+                id,
+                login,
+                limit,
+                page
             }
         })
     )

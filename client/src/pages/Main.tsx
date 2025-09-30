@@ -1,17 +1,20 @@
 import "../styles/Main.css";
 import SongsContainer from "../components/SongsContainer";
 import ArtistsContainer from "../components/ArtistsContainer";
+import { songsFetch } from "../API/songs";
 
 function Main() {
     return (
         <>
-            <h1 className="artists-title">Popular artists</h1>
+            <h2 className="artists-title">Popular artists</h2>
             <div className="artists-list-wrapper">
                 <ArtistsContainer />
             </div>
-            <h1 className="songs-title">Popular songs</h1>
+            <h2 className="songs-title">Popular songs</h2>
             <div className="songs-list-wrapper">
-                <SongsContainer />
+                <SongsContainer
+                    queryFn={() => songsFetch(10)}
+                />
             </div>
         </>
     );

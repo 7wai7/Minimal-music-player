@@ -8,17 +8,21 @@ dotenv.config();
 
 @Injectable()
 export class StorageService {
-    private storage: Storage;
+    storage: Storage;
 
     constructor() {
         this.storage = new Storage({
-            keyFilename: path.join(process.cwd(), 'social-network-uploads-4fb82798ee46.json'),
+            keyFilename: path.join(process.cwd(), 'keys', 'social-network-uploads-4fb82798ee46.json'),
             projectId: process.env.GCS_BUCKET_NAME,
         })
     }
 
 
     async getDownloadLink(url: string, originalname: string, mode: 'inline' | 'download' = 'download') {
+        console.log(url);
+        console.log(originalname);
+        
+        
         const bucket = this.storage.bucket(String(process.env.GCS_BUCKET_NAME));
         const filename = url.split('/').pop();
         if (!filename) {

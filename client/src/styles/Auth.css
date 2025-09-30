@@ -7,8 +7,7 @@
     aspect-ratio: 1 / 1;
     padding: 40px;
     border-radius: 10px;
-    background: linear-gradient(180deg, #efefef 0%, #9d9d9d 100%);
-    box-shadow: inset 2px 0 1px 0 #fff, inset 0 2px 1px 0 #fff, 1px 0 1px 0 #545454, 0 3px 1px 0 #545454;
+    background: var(--theme-3);
 }
 
 .auth-form .form-inputs {
@@ -28,7 +27,6 @@
     font-size: .9em;
     border-radius: 4px;
     background: #fff;
-    box-shadow: var(--3d-box-negative-inner);
     border: none;
     outline: none;
 }
@@ -56,8 +54,7 @@
     text-decoration: underline;
     font-weight: 500;
     font-size: 12px;
-    color: #4845ff;
-    text-shadow: 0px .5px .5px #484848;
+    color: #3a83f4;
 }
 
 .form-actions .submit-btn {
@@ -66,7 +63,6 @@
     border-radius: 10px;
     width: 200px;
     height: 40px;
-    box-shadow: var(--3d-box-negative-inner);
     background: var(--theme);
 }
 
