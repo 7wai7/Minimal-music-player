@@ -5,14 +5,40 @@ import Volume from "./Volume";
 import Slider from "./Slider";
 import { useAudio } from "../contexts/AudioProvider";
 import formatDuration from "../utils/formatDuration";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import downloadFile from "../utils/downloadFile";
-import { Link } from "react-router-dom";
 
-function Footer() {
+interface Props {
+    isOpenModal: boolean;
+    closeModal: () => void;
+}
+
+function Footer({
+    isOpenModal,
+    closeModal
+}: Props) {
     const { isPlaying, togglePlay, time, handleTime, duration, currentSong } = useAudio();
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const showModal = () => {
+        if(isOpenModal) closeModal();
+        else if (currentSong) navigate(`/song/${currentSong.id}`, { state: { previousLocation: location, currentSong } })
+    }
+
+    const onClick = (e: React.MouseEvent) => {
+        // Якщо клік по посиланню або кнопці — нічого не робимо (дозволяємо нормальну поведінку)
+        const anchor = (e.target as HTMLElement).closest('a, button, input');
+        if (anchor) return;
+
+        // додатково перевірити dropdown, input тощо:
+        if ((e.target as HTMLElement).closest('.dropdown-menu-container')) return;
+
+        showModal();
+    }
 
     return (
-        <footer className={!currentSong ? "disabled" : ""}>
+        <footer className={!currentSong ? "disabled" : ""} onClick={onClick}>
             <div className="audio-slider-wrapper">
                 <span className="time">{formatDuration(time)}</span>
                 <Slider
@@ -51,7 +77,12 @@ function Footer() {
                             {currentSong.artist.login}
                         </Link>
                         <span>-</span>
-                        <button className="song-title">{currentSong.title}</button>
+                        <button
+                            onClick={showModal}
+                            className="song-title"
+                        >
+                            {currentSong.title}
+                        </button>
                     </div>
                 ) : (
                     <p className="placeholder">No song playing</p>

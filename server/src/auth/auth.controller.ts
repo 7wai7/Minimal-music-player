@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Res, UseFilters } from '@nestjs/common';
+import { Body, Controller, Get, Post, Res, UnauthorizedException, UseFilters, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import type { Response } from 'express';
 import { ApiBody, ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
@@ -6,6 +6,9 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { ValidationDto } from './dto/validation-dto';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { UserDto } from 'src/users/dto/user.dto';
+import { ReqUser } from 'src/decorators/ReqUser';
+import { Auth } from 'src/decorators/Auth';
+import { JwtAuthGuard } from './jwt-auth.quard';
 
 @Controller('auth')
 export class AuthController {
@@ -37,7 +40,7 @@ export class AuthController {
     @Post("/login")
     async login(@Body() userDto: LoginUserDto, @Res() res: Response) {
         console.log(userDto);
-        
+
         const { token, user } = await this.authService.login(userDto);
 
         // Set the JWT as an HttpOnly cookie for security
@@ -52,7 +55,7 @@ export class AuthController {
     }
 
 
-    
+
     @ApiOperation({
         summary: 'Реєстрація користувача в систему',
         description: 'Аутентифікація користувача за допомогою логіну/email та паролю. Повертає JWT токен у httpOnly cookie та дані користувача.'
@@ -92,5 +95,18 @@ export class AuthController {
     @Post("/logout")
     logout(@Res() res: Response) {
         this.authService.logout(res);
+    }
+
+
+    @UseGuards(JwtAuthGuard)
+    @Auth({ required: false })
+    @Get('/me')
+    me(@ReqUser() user: UserDto) {
+        if (user) return {
+            id: user.id,
+            login: user.login,
+            email: user.email,
+        };
+        throw new UnauthorizedException({ message: 'Unauthorized' });
     }
 }

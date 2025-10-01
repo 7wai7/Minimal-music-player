@@ -11,15 +11,15 @@ function PlayPauseBtn({
     onClick
 }: Props) {
     return (
-        <button onClick={onClick} className={`tr-bg play-pause-btn icon-wrapper ${isPlaying ? "play" : "pause"}`}>
+        <button onClick={onClick} className={`tr-bg play-pause-btn icon-wrapper ${isPlaying ? "pause" : "play"}`}>
             {
                 isPlaying
-                    ? <Play
+                    ? <Pause
                         size={16}
                         strokeLinecap="square"
                         strokeLinejoin="miter"
                     />
-                    : <Pause
+                    : <Play
                         size={16}
                         strokeLinecap="square"
                         strokeLinejoin="miter"

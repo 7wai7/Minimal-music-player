@@ -19,15 +19,12 @@ export class StorageService {
 
 
     async getDownloadLink(url: string, originalname: string, mode: 'inline' | 'download' = 'download') {
-        console.log(url);
-        console.log(originalname);
-        
-        
         const bucket = this.storage.bucket(String(process.env.GCS_BUCKET_NAME));
         const filename = url.split('/').pop();
         if (!filename) {
             throw new HttpException('Invalid file URL', HttpStatus.BAD_REQUEST);
         }
+        const ext = path.extname(filename);
         const file = bucket.file(filename);
         const [downloadUrl] = await file.getSignedUrl({
             version: 'v4',
@@ -35,7 +32,7 @@ export class StorageService {
             expires: Date.now() + 5 * 60 * 1000, // 5 хвилин
             responseDisposition:
                 mode === 'download'
-                    ? `attachment; filename="${originalname}"`
+                    ? `attachment; filename="${originalname}.${ext}"`
                     : 'inline'
         });
 

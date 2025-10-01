@@ -16,8 +16,8 @@ export class AuthService {
     ) { }
 
     async login(userDto: LoginUserDto) {
-        const user = await this.userService.findOne({ login: userDto.login});
-        
+        const user = await User.findOne({ where: { login: userDto.login } });
+
         if (!user) {
             throw new HttpExceptionField([
                 {
@@ -43,7 +43,7 @@ export class AuthService {
     }
 
     async register(userDto: RegisterUserDto) {
-        const existedLogin = await this.userService.findOne({ login: userDto.login});
+        const existedLogin = await this.userService.findOne({ login: userDto.login });
         if (existedLogin) {
             throw new HttpExceptionField([
                 {
@@ -53,7 +53,7 @@ export class AuthService {
             ]);
         }
 
-        const existedEmail = await this.userService.findOne({ email: userDto.email});
+        const existedEmail = await this.userService.findOne({ email: userDto.email });
         if (existedEmail) {
             throw new HttpExceptionField([
                 {
@@ -67,7 +67,7 @@ export class AuthService {
         const user = await this.userService.create({ ...userDto, password: hash });
         return this.generateToken(user.get({ plain: true }));
     }
-    
+
     logout(res: Response) {
         res.clearCookie('token');
         res.end();

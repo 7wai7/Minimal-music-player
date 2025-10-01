@@ -33,7 +33,7 @@ export class UsersController {
 	})
 	@Get('/by-login/:login')
 	findOneByLogin(@Param('login') login: string) {
-		return this.usersService.findOne({ login });
+		return this.usersService.findOneAndCountSongs({ login });
 	}
 
 	@ApiOperation({ summary: 'Get users' })

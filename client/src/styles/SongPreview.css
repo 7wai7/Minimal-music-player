@@ -5,17 +5,25 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
     padding: 10px 16px;
-    cursor: pointer;
+    /* cursor: pointer; */
 }
 
 .song-preview:hover {
     background-color: #63759987;
 }
 
+.song-preview .block-l,
+.song-preview .block-r {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 .song-preview .play-pause-btn {
     width: 36px;
-    margin-right: 16px;
+    margin-right: 24px;
 }
 
 .song-preview .meta {
@@ -35,12 +43,12 @@
 }
 
 
-.song-preview .duration {
-    color: var(--theme-3-light);
-    margin-left: auto;
-    margin-right: 10px;
-}
 
+
+.song-preview .block-r span {
+    color: var(--theme-3-light);
+    margin-right: 16px;
+}
 
 .song-preview .download-btn {
     margin-right: 0;

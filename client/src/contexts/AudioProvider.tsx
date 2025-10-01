@@ -15,6 +15,8 @@ type AudioContextType = {
     setDuration: React.Dispatch<React.SetStateAction<number>>;
     togglePlay: () => void;
     playSong: (song: SongDTO) => void;
+    setOpenPanelCb: (cb: (song: SongDTO) => void) => void;
+    openPanel: (song: SongDTO) => void;
 };
 
 const AudioContext = createContext<AudioContextType | null>(null);
@@ -33,6 +35,8 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
     const [volume, setVolume] = useState(0.5);
     const [isMuted, setIsMuted] = useState(false);
     const [duration, setDuration] = useState(0);
+
+    const [openPanel, setOpenPanel] = useState<(song: SongDTO) => void>(() => {});
 
     const handleTime = (value: number) => {
         setTime(value);
@@ -70,6 +74,10 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
 
         setCurrentSong(song);
     }
+
+    const setOpenPanelCb = (cb: (song: SongDTO) => void) => {
+        setOpenPanel(cb);
+    };
 
     useEffect(() => {
         const handlePlay = () => setIsPlaying(true);
@@ -115,7 +123,9 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
             handleIsMuted,
             setDuration,
             togglePlay,
-            playSong
+            playSong,
+            setOpenPanelCb,
+            openPanel
         }}>
             {children}
         </AudioContext.Provider>

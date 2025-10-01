@@ -1,34 +1,57 @@
 import { Link } from "react-router-dom";
 import "../styles/Header.css"
 import { useUser } from "../contexts/userContext";
-import { Search } from "lucide-react";
+import { ArrowLeft, Search } from "lucide-react";
 
-function Header() {
+interface Props {
+    isOpenModal: boolean;
+    closeModal: () => void;
+}
+
+function Header({
+    isOpenModal,
+    closeModal
+}: Props) {
     const { user } = useUser();
 
     return (
         <header>
             <nav>
-                <Link to={"/"}>
-                    <span>Home</span>
-                </Link>
                 {
-                    user
-                        ? <Link to={`/artist/${user.id}`}>
-                            <span>Profile</span>
-                        </Link>
-                        : <Link to={`/auth`}>
-                            <span>Login</span>
-                        </Link>
+                    isOpenModal &&
+                    <div className="nav-item">
+                        <button onClick={closeModal} className="icon-wrapper">
+                            <ArrowLeft
+                                size={16}
+                                color="var(--theme-2)"
+                                strokeLinecap="square"
+                                strokeLinejoin="miter"
+                            />
+                        </button>
+                    </div>
                 }
-                <button className="search-btn icon-wrapper">
-                    <Search
-                        size={16}
-                        color="var(--theme-2)"
-                        strokeLinecap="square"
-                        strokeLinejoin="miter"
-                    />
-                </button>
+                <div className="nav-item">
+                    <Link to={"/"}>
+                        Home
+                    </Link>
+                </div>
+                <div className="nav-item">
+                    {
+                        user
+                            ? <Link to={`/artist/${user.login}`}>Profile</Link>
+                            : <Link to={`/auth`}>Login</Link>
+                    }
+                </div>
+                <div className="nav-item">
+                    <button className="search-btn icon-wrapper">
+                        <Search
+                            size={16}
+                            color="var(--theme-2)"
+                            strokeLinecap="square"
+                            strokeLinejoin="miter"
+                        />
+                    </button>
+                </div>
             </nav>
         </header>
     );

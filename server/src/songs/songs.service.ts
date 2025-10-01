@@ -11,7 +11,6 @@ import * as path from 'path';
 import * as ffmpeg from 'fluent-ffmpeg';
 import ffprobeInstaller from '@ffprobe-installer/ffprobe';
 import { UserDto } from 'src/users/dto/user.dto';
-import { Sequelize } from 'sequelize-typescript';
 
 ffmpeg.setFfprobePath(ffprobeInstaller.path);
 
@@ -43,7 +42,6 @@ export class SongsService {
 
 	constructor(
 		private readonly storageService: StorageService,
-		@Inject(Sequelize) private readonly sequelize: Sequelize,
 	) { }
 
 	async findOne(currentUserId: number | null, options: Partial<SongDto>) {

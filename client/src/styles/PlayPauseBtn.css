@@ -8,25 +8,25 @@
 }
 
 .play-pause-btn.play {
-    background-color: var(--theme-2);
-}
-
-.play-pause-btn.pause {
     background-color: var(--theme);
 }
 
-.play-pause-btn.play:hover {
-    background-color: var(--theme-2-dark);
+.play-pause-btn.pause {
+    background-color: var(--theme-2);
 }
 
-.play-pause-btn.pause:hover {
+.play-pause-btn.play:hover {
     background-color: var(--theme-dark);
 }
 
+.play-pause-btn.pause:hover {
+    background-color: var(--theme-2-dark);
+}
+
 .play-pause-btn.play svg {
-    stroke: var(--theme);
+    stroke: var(--theme-2);
 }
 
 .play-pause-btn.pause svg {
-    stroke: var(--theme-2);
+    stroke: var(--theme);
 }

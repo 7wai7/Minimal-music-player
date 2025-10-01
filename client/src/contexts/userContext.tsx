@@ -1,6 +1,6 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import type UserDTO from "../types/user";
-import { fetchLogout } from "../API/auth";
+import { fetchLogout, fetchMe } from "../API/auth";
 import { useNavigate } from "react-router-dom";
 
 type UserContextType = {
@@ -27,6 +27,18 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
             })
             .catch((err) => console.error(err));
     };
+
+    useEffect(() => {
+        fetchMe()
+            .then((user) => {
+                setUser(user);
+            })
+            .catch((err) => {
+                console.error(err)
+                setUser(null);
+                navigate('/auth');
+            });
+    }, []);
 
     return (
         <UserContext.Provider value={{ user, setUser, logout }}>

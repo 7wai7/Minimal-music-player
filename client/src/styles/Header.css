@@ -19,26 +19,33 @@ header nav {
     height: 36px;
     background: var(--theme);
     border-radius: 2px;
+}
+
+header nav .nav-item {
+    height: 100%;
+    display: flex;
+    align-items: center;
     position: relative;
 }
 
-header nav a:not(:last-child)::after,
-header nav button:not(:last-child)::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    height: 36px;
-    width: 1px;
-    background: linear-gradient(0, var(--theme-dark) 0%, rgba(0, 0, 0, 0) 90%);
+
+header nav a,
+header nav button {
+    padding: 0 10px;
 }
 
-header nav span {
+header nav * {
     color: var(--theme-2);
-    padding: 4px 12px;
     font-size: 16px;
     font-weight: 400;
 }
 
-header .search-btn {
-    padding: 10px;
+header nav .nav-item:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 36px;
+    width: 1px;
+    background: linear-gradient(0, var(--theme-dark) 0%, rgba(0, 0, 0, 0) 90%);
 }

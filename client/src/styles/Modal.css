@@ -1,0 +1,88 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    z-index: 50;
+    pointer-events: none;
+    overflow-x: hidden;
+}
+
+.modal-overlay.show {
+    pointer-events: auto;
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: row;
+    width: var(--page-width);
+    height: 100vh;
+    padding: 20px;
+    padding-top: calc(var(--header-height) + 20px);
+    padding-bottom: calc(var(--footer-height) + 20px);
+    background-color: var(--bg);
+    transform: translateX(100%);
+    transition: transform .2s ease;
+}
+
+.modal-overlay.show .modal-content {
+    transform: translateX(0);
+}
+
+
+.modal-overlay .disc-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    overflow: hidden;
+}
+
+
+.modal-content .disc-wrapper {
+    height: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.49), 0 -1px 2px 0 rgba(255, 255, 255, 0.49);
+}
+
+.modal-overlay .disc-cover-img {
+    height: 100%;
+    aspect-ratio: 1 / 1;
+}
+
+
+
+.modal-overlay .song-meta {
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.modal-content .song-meta .top {
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+}
+
+.modal-content span,
+.modal-content .song-meta .artist {
+    color: var(--theme-2);
+}
+
+.modal-content .song-meta .artist {
+    font-size: 18px;
+}
+
+.modal-content .p,
+.modal-content .song-title {
+    font-weight: 500;
+    color: var(--theme);
+}
+
+
+
+.modal-content .lyrics {
+    color: var(--theme-2);
+    max-height: 100%;
+    overflow-y: auto;
+}

@@ -2,13 +2,11 @@ import type SongDTO from "../types/song";
 import api from "./axios";
 import fetcher from "./fetcher";
 
-export async function songFetch(id: number, limit?: number): Promise<SongDTO> {
+export async function songFetch(id: number | string): Promise<SongDTO> {
+    console.log(id);
+    
     return fetcher(
-        api.get(`/api/songs/${id}`, {
-            params: {
-                limit
-            }
-        })
+        api.get(`/api/songs/by-id/${id}`)
     )
 }
 

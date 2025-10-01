@@ -1,6 +1,6 @@
 import './App.css'
 import MainBackground from './components/MainBackground'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import Auth from './pages/Auth'
 import { UserProvider } from './contexts/userContext';
 import Main from './pages/Main';
@@ -8,29 +8,39 @@ import Layout from './pages/Layout';
 import Artist from './pages/Artist';
 
 function App() {
+	const location = useLocation();
+	const navigate = useNavigate();
+	const previousLocation = location.state?.previousLocation;
+	const song = location.state?.song;
+
 	return (
 		<>
-			<BrowserRouter>
-				<UserProvider>
-					<MainBackground />
-					<Routes>
-						<Route
-							path="/auth"
-							element={<Auth />}
-						/>
+			<UserProvider>
+				<MainBackground />
+				<Routes location={previousLocation || location}>
+					<Route
+						path="/auth"
+						element={<Auth />}
+					/>
+
+					<Route
+						path="/"
+						element={
+							<Layout previousLocation={previousLocation}/>
+						}
+					>
+						<Route index element={<Main />} />
+						<Route path='/artist/:login' element={<Artist />} />
 
 						<Route
-							path="/"
+							path="/song/:id"
 							element={
-								<Layout />
+								<Main />
 							}
-						>
-							<Route index element={<Main />} />
-							<Route path='/artist/:login' element={<Artist />} />
-						</Route>
-					</Routes>
-				</UserProvider>
-			</BrowserRouter>
+						/>
+					</Route>
+				</Routes>
+			</UserProvider>
 		</>
 	)
 }
