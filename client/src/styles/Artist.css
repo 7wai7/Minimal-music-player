@@ -10,6 +10,7 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
+    height: 100%;
 }
 
 .artist-page .meta .name {
@@ -20,6 +21,18 @@
 .artist-page .meta .songs-count {
     color: var(--theme-2);
     font-size: 16px;
+}
+
+.artist-page .upload-song-btn {
+    margin-top: 40px;
+    border-radius: 8px;
+    padding: 6px 10px;
+    background-color: var(--theme-2);
+}
+
+.artist-page .upload-song-btn:hover {
+    color: var(--theme-2);
+    background-color: var(--theme);
 }
 
 .artist-page .avatar-wrapper {

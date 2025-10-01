@@ -6,41 +6,59 @@ import { UserProvider } from './contexts/userContext';
 import Main from './pages/Main';
 import Layout from './pages/Layout';
 import Artist from './pages/Artist';
+import type { ModalType } from './types/modal';
 
 function App() {
 	const location = useLocation();
 	const navigate = useNavigate();
 	const previousLocation = location.state?.previousLocation;
+	const modalType = location.state?.modalType as ModalType | undefined;
 	const song = location.state?.song;
 
 	return (
 		<>
-			<UserProvider>
-				<MainBackground />
-				<Routes location={previousLocation || location}>
+			<MainBackground />
+			<Routes location={previousLocation || location}>
+				<Route
+					path="/auth"
+					element={<Auth />}
+				/>
+
+				<Route
+					path="/"
+					element={
+						<Layout
+							previousLocation={previousLocation}
+							modalType={modalType}
+						/>
+					}
+				>
+					<Route index element={<Main />} />
+					<Route path='/artist/:login' element={<Artist />} />
+
+
 					<Route
-						path="/auth"
-						element={<Auth />}
+						path="/song/:id"
+						element={
+							<Main />
+						}
 					/>
 
 					<Route
-						path="/"
+						path="/artist/:login/upload"
 						element={
-							<Layout previousLocation={previousLocation}/>
+							<Artist />
 						}
-					>
-						<Route index element={<Main />} />
-						<Route path='/artist/:login' element={<Artist />} />
+					/>
 
-						<Route
-							path="/song/:id"
-							element={
-								<Main />
-							}
-						/>
-					</Route>
-				</Routes>
-			</UserProvider>
+					<Route
+						path="/playlist"
+						element={
+							<Main />
+						}
+					/>
+				</Route>
+			</Routes>
 		</>
 	)
 }

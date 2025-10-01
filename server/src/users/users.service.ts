@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UserDto } from './dto/user.dto';
 import { User } from 'src/models/user.model';
 import { RegisterUserDto } from 'src/auth/dto/register-user.dto';
-import { Op } from 'sequelize';
+import { FindOptions, Op } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
 import { Song } from 'src/models/song.model';
 
@@ -20,12 +20,13 @@ export class UsersService {
         });
     }
 
-    async findOneAndCountSongs(options: Partial<UserDto>) {
-        return await User.findOne({
+    async findOneAndCountSongs(currentUserId: number | undefined, options: Partial<UserDto>) {
+        const user = await User.scope(User.withOwnerProfile(currentUserId)).findOne({
             where: { ...options },
             attributes: [
                 'id',
                 'login',
+                'isOwnProfile',
                 [Sequelize.fn('COUNT', Sequelize.col('songs.id')), 'songsCount']
             ],
             include: [
@@ -37,6 +38,10 @@ export class UsersService {
             ],
             group: ['User.id']
         });
+
+        if (!user) return null;
+        user.setDataValue('isOwnProfile', user.id === currentUserId);
+        return user;
     }
 
     async findMany(options: {}, limit = 10) {

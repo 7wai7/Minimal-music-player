@@ -1,0 +1,1 @@
+export type ModalType = 'audio' | 'upload' | 'playlist'

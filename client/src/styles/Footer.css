@@ -50,6 +50,7 @@ footer {
 }
 
 .audio-btns .skip-btn,
+.audio-controllers .playlist-btn,
 .audio-controllers .download-btn {
     width: 40px;
     height: 36px;
@@ -58,6 +59,7 @@ footer {
 }
 
 .audio-btns .skip-btn:hover,
+.audio-controllers .playlist-btn:hover,
 .audio-controllers .download-btn:hover {
     background-color: white;
 }
@@ -103,7 +105,12 @@ footer {
 }
 
 
-
+.audio-controllers .right-block {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+}
 
 
 

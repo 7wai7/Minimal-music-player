@@ -19,39 +19,31 @@ function Header({
             <nav>
                 {
                     isOpenModal &&
-                    <div className="nav-item">
-                        <button onClick={closeModal} className="icon-wrapper">
-                            <ArrowLeft
-                                size={16}
-                                color="var(--theme-2)"
-                                strokeLinecap="square"
-                                strokeLinejoin="miter"
-                            />
-                        </button>
-                    </div>
-                }
-                <div className="nav-item">
-                    <Link to={"/"}>
-                        Home
-                    </Link>
-                </div>
-                <div className="nav-item">
-                    {
-                        user
-                            ? <Link to={`/artist/${user.login}`}>Profile</Link>
-                            : <Link to={`/auth`}>Login</Link>
-                    }
-                </div>
-                <div className="nav-item">
-                    <button className="search-btn icon-wrapper">
-                        <Search
+                    <button onClick={closeModal} className="nav-item icon-wrapper">
+                        <ArrowLeft
                             size={16}
                             color="var(--theme-2)"
                             strokeLinecap="square"
                             strokeLinejoin="miter"
                         />
                     </button>
-                </div>
+                }
+                <Link to={"/"} className="nav-item">
+                    Home
+                </Link>
+                {
+                    user
+                        ? <Link to={`/artist/${user.login}`} className="nav-item">Profile</Link>
+                        : <Link to={`/auth`} className="nav-item">Login</Link>
+                }
+                <button className="nav-item search-btn icon-wrapper">
+                    <Search
+                        size={16}
+                        color="var(--theme-2)"
+                        strokeLinecap="square"
+                        strokeLinejoin="miter"
+                    />
+                </button>
             </nav>
         </header>
     );

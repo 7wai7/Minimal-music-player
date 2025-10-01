@@ -1,4 +1,4 @@
-import { Download, SkipBack, SkipForward } from "lucide-react";
+import { Download, ListMusic, SkipBack, SkipForward } from "lucide-react";
 import "../styles/Footer.css"
 import PlayPauseBtn from "./PlayPauseBtn";
 import Volume from "./Volume";
@@ -9,21 +9,28 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import downloadFile from "../utils/downloadFile";
 
 interface Props {
-    isOpenModal: boolean;
+    isOpenAudioModal: boolean;
+    isOpenPlaylistModal: boolean;
     closeModal: () => void;
 }
 
 function Footer({
-    isOpenModal,
+    isOpenAudioModal,
+    isOpenPlaylistModal,
     closeModal
 }: Props) {
     const { isPlaying, togglePlay, time, handleTime, duration, currentSong } = useAudio();
     const navigate = useNavigate();
     const location = useLocation();
 
-    const showModal = () => {
-        if(isOpenModal) closeModal();
-        else if (currentSong) navigate(`/song/${currentSong.id}`, { state: { previousLocation: location, currentSong } })
+    const showAudioModal = () => {
+        if (isOpenAudioModal) closeModal();
+        else if (currentSong) navigate(`/song/${currentSong.id}`, { state: { previousLocation: location, modalType: "audio", currentSong } })
+    }
+
+    const showPlaylistModal = () => {
+        if (isOpenPlaylistModal) closeModal();
+        else navigate(`/playlist`, { state: { previousLocation: location, modalType: "playlist" } })
     }
 
     const onClick = (e: React.MouseEvent) => {
@@ -34,7 +41,7 @@ function Footer({
         // додатково перевірити dropdown, input тощо:
         if ((e.target as HTMLElement).closest('.dropdown-menu-container')) return;
 
-        showModal();
+        showAudioModal();
     }
 
     return (
@@ -78,7 +85,7 @@ function Footer({
                         </Link>
                         <span>-</span>
                         <button
-                            onClick={showModal}
+                            onClick={showAudioModal}
                             className="song-title"
                         >
                             {currentSong.title}
@@ -87,19 +94,34 @@ function Footer({
                 ) : (
                     <p className="placeholder">No song playing</p>
                 )}
-                <button
-                    onClick={() => {
-                        if (currentSong) downloadFile(currentSong.url, currentSong.title);
-                    }}
-                    className="download-btn tr-bg icon-wrapper"
-                >
-                    <Download
-                        size={16}
-                        color="var(--theme)"
-                        strokeLinecap="square"
-                        strokeLinejoin="miter"
-                    />
-                </button>
+
+                <div className="right-block">
+                    <button
+                        onClick={showPlaylistModal}
+                        className="playlist-btn tr-bg icon-wrapper"
+                    >
+                        <ListMusic
+                            size={16}
+                            color="var(--theme)"
+                            strokeLinecap="square"
+                            strokeLinejoin="miter"
+                        />
+                    </button>
+
+                    <button
+                        onClick={() => {
+                            if (currentSong) downloadFile(currentSong.url, currentSong.title);
+                        }}
+                        className="download-btn tr-bg icon-wrapper"
+                    >
+                        <Download
+                            size={16}
+                            color="var(--theme)"
+                            strokeLinecap="square"
+                            strokeLinejoin="miter"
+                        />
+                    </button>
+                </div>
             </div>
         </footer>
     );

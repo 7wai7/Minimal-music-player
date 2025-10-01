@@ -3,18 +3,29 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import { AudioProvider } from "../contexts/AudioProvider";
 import Modal from "../components/Modal";
+import AudioModal from "../components/modals/AudioModal";
+import UploadModal from "../components/modals/UploadModal";
+import type { ModalType } from "../types/modal";
+import PlaylistModal from "../components/modals/PlaylistModal";
 
 interface Props {
-    previousLocation: any
+    previousLocation: any,
+    modalType?: ModalType
 }
 
 function Layout({
-    previousLocation
+    previousLocation,
+    modalType
 }: Props) {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const isOpenModal = !!(previousLocation || location.pathname.startsWith("/song"));
+    console.log(modalType);
+    
+
+    const isOpenAudioModal = !!(modalType == "audio" || location.pathname.startsWith("/song"));
+    const isOpenUploadModal = !!(modalType === "upload" || location.pathname.split("/")[3] === "upload");
+    const isOpenPlaylistModal = !!(modalType === "playlist" || location.pathname.startsWith("/playlist"));
 
     const closeModal = () => {
         if (previousLocation) {
@@ -28,20 +39,39 @@ function Layout({
         <AudioProvider>
             <div className={(location.pathname.split('/')[1] || "main") + "-page page"}>
                 <Modal
-                    isOpen={isOpenModal}
-                    id={location.pathname.split('/').pop()}
-                // song={song}
-                />
+                    isOpen={isOpenAudioModal}
+                    className="audio"
+                >
+                    <AudioModal
+                        id={location.pathname.split('/').pop()}
+                    // song={song}
+                    />
+                </Modal>
+
+                <Modal
+                    isOpen={isOpenUploadModal}
+                    className="upload"
+                >
+                    <UploadModal />
+                </Modal>
+
+                <Modal
+                    isOpen={isOpenPlaylistModal}
+                    className="playlist"
+                >
+                    <PlaylistModal />
+                </Modal>
 
                 <Header
-                    isOpenModal={isOpenModal}
+                    isOpenModal={isOpenAudioModal || isOpenUploadModal || isOpenPlaylistModal}
                     closeModal={closeModal}
                 />
                 <main className="page-content">
                     <Outlet />
                 </main>
                 <Footer
-                    isOpenModal={isOpenModal}
+                    isOpenAudioModal={isOpenAudioModal}
+                    isOpenPlaylistModal={isOpenPlaylistModal}
                     closeModal={closeModal}
                 />
             </div>

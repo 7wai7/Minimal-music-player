@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
+import { Column, DataType, HasMany, Model, Sequelize, Table } from "sequelize-typescript";
 import { Song } from "./song.model";
 
 interface UserCreationAttrs {
@@ -38,6 +38,24 @@ export class User extends Model<User, UserCreationAttrs> {
 	})
 	@Column({ type: DataType.STRING, allowNull: false })
 	declare password: string;
+
+
+	@Column({ type: DataType.VIRTUAL })
+	declare isOwnProfile: boolean;
+
+	static withOwnerProfile(currentUserId?: number) {
+		if (!currentUserId) return {};
+		return {
+			attributes: {
+				include: [
+					[
+						Sequelize.literal(`CASE WHEN "User"."id" = ${currentUserId} THEN true ELSE false END`),
+						'isOwnProfile'
+					]
+				]
+			}
+		};
+	}
 
 
 

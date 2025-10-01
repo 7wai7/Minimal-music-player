@@ -5,6 +5,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.quard';
 import { ReqUser } from 'src/decorators/ReqUser';
 import { UserDto } from './dto/user.dto';
 import { ApiTags, ApiOperation, ApiParam, ApiBearerAuth, ApiBody, ApiResponse } from '@nestjs/swagger';
+import { Auth } from 'src/decorators/Auth';
 
 @Controller('users')
 export class UsersController {
@@ -31,9 +32,14 @@ export class UsersController {
 		description: 'The user has been successfully retrieved.',
 		type: UserDto
 	})
+	@UseGuards(JwtAuthGuard)
+	@Auth({ required: false })
 	@Get('/by-login/:login')
-	findOneByLogin(@Param('login') login: string) {
-		return this.usersService.findOneAndCountSongs({ login });
+	findOneByLogin(
+		@Param('login') login: string,
+		@ReqUser() user?: UserDto,
+	) {
+		return this.usersService.findOneAndCountSongs(user?.id, { login });
 	}
 
 	@ApiOperation({ summary: 'Get users' })
@@ -45,7 +51,7 @@ export class UsersController {
 	})
 	@Get()
 	findMany(@Param('limit') limit?: string) {
-		return this.usersService.findMany({ }, limit ? +limit : 10);
+		return this.usersService.findMany({}, limit ? +limit : 10);
 	}
 
 	@ApiOperation({ summary: 'Find users by login' })
