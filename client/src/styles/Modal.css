@@ -11,8 +11,6 @@
 }
 
 .modal-content {
-    display: flex;
-    flex-direction: row;
     width: var(--page-width);
     height: 100vh;
     padding: 20px;

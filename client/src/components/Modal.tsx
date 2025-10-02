@@ -15,7 +15,7 @@ const Modal = ({
     // console.log("render modal");
 
     // return ReactDOM.createPortal(
-    return <div className={`modal-overlay ${className} ${isOpen ? "show" : "hidden"}`}>
+    return <div className={`modal-overlay ${className} ${isOpen ? "show" : ""}`}>
         <div className='modal-content'>
             {children}
         </div>

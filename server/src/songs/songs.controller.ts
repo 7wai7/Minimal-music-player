@@ -132,13 +132,13 @@ export class SongsController {
 		return this.songsService.uploadAndCreate(user.id, createSongDto, file);
 	}
 
-	@ApiOperation({ summary: 'Create a new song' })
-	@ApiResponse({ status: 201, description: 'The song has been successfully created.' })
-	@ApiResponse({ status: 400, description: 'Bad Request.' })
-	@ApiBody({ type: CreateSongDto })
-	@UseGuards(JwtAuthGuard)
-	@Post()
-	create(@Body() createSongDto: CreateSongDto, @ReqUser() user: UserDto) {
-		return this.songsService.create({ ...createSongDto, artist_id: user.id });
-	}
+	// @ApiOperation({ summary: 'Create a new song' })
+	// @ApiResponse({ status: 201, description: 'The song has been successfully created.' })
+	// @ApiResponse({ status: 400, description: 'Bad Request.' })
+	// @ApiBody({ type: CreateSongDto })
+	// @UseGuards(JwtAuthGuard)
+	// @Post()
+	// create(@Body() createSongDto: CreateSongDto, @ReqUser() user: UserDto) {
+	// 	return this.songsService.create({ ...createSongDto, artist_id: user.id });
+	// }
 }

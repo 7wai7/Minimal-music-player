@@ -1,3 +1,9 @@
+.modal-overlay.audio .modal-content {
+    display: flex;
+    flex-direction: row;
+}
+
+
 .modal-overlay .disc-container {
     display: flex;
     align-items: center;
@@ -34,7 +40,7 @@
     gap: 6px;
 }
 
-.modal-content span,
+.modal-overlay.audio .modal-content span,
 .modal-content .song-meta .artist {
     color: var(--theme-2);
 }

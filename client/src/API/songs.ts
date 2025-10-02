@@ -2,9 +2,13 @@ import type SongDTO from "../types/song";
 import api from "./axios";
 import fetcher from "./fetcher";
 
+export async function uploadSongFetch(formData: FormData): Promise<SongDTO> {
+    return fetcher(
+        api.post(`/api/songs/upload-and-create`, formData)
+    )
+}
+
 export async function songFetch(id: number | string): Promise<SongDTO> {
-    console.log(id);
-    
     return fetcher(
         api.get(`/api/songs/by-id/${id}`)
     )

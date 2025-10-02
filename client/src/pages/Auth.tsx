@@ -4,6 +4,8 @@ import type AuthData from "../types/authData";
 import { authFetch } from "../API/auth";
 import { useUser } from "../contexts/userContext";
 import { useNavigate } from "react-router-dom";
+import useFieldErrors from "../hooks/useFieldErrors";
+
 
 function Auth() {
     const { setUser } = useUser();
@@ -15,48 +17,14 @@ function Auth() {
         password: undefined
     });
 
-    const initialAuthErrors = {
-        login: {
-            isError: false,
-            message: ''
-        },
-        email: {
-            isError: false,
-            message: ''
-        },
-        password: {
-            isError: false,
-            message: ''
-        }
-    };
-
-    const [authErrors, setAuthErrors] = useState(initialAuthErrors);
-    type Field = 'login' | 'email' | 'password';
+    const {
+        errors: authErrors,
+        showErrors
+    } = useFieldErrors();
+    const [globalError, setGlobalError] = useState<string | null>(null);
 
     const [isAnimating, setIsAnimating] = useState(false);
     const discImgRef = useRef<HTMLImageElement>(null);
-
-
-    const showErrors = (
-        errors: {
-            field: Field,
-            message: string
-        }[]
-    ) => {
-        let updated = { ...initialAuthErrors };
-        errors.forEach(err => {
-            updated = {
-                ...updated,
-                [err.field]: {
-                    ...updated[err.field],
-                    isError: true,
-                    message: err.message
-                }
-            };
-        });
-
-        setAuthErrors(updated);
-    }
 
     const submitHandler = (e: React.FormEvent) => {
         e.preventDefault();
@@ -75,7 +43,11 @@ function Auth() {
             })
             .catch(err => {
                 setIsAnimating(false);
-                showErrors(err.errors || []);
+                if (err.errors) {
+                    showErrors(err.errors);
+                } else {
+                    setGlobalError(err.message || "Unexpected error");
+                }
             });
     }
 
@@ -88,11 +60,11 @@ function Auth() {
                         name="login"
                         required
                         placeholder="Login"
-                        className={authErrors.login.isError ? 'error' : ''}
+                        className={authErrors.login ? 'error' : ''}
                         value={authData.login ?? ""}
                         onChange={(e) => setAuthData({ ...authData, login: e.target.value })}
                     />
-                    {authErrors.login.isError && (
+                    {authErrors.login && (
                         <div className="error-message">{authErrors.login.message}</div>
                     )}
                 </div>
@@ -104,11 +76,11 @@ function Auth() {
                             name="email"
                             required
                             placeholder="Email"
-                            className={authErrors.email.isError ? 'error' : ''}
+                            className={authErrors.email ? 'error' : ''}
                             value={authData.email ?? ""}
                             onChange={(e) => setAuthData({ ...authData, email: e.target.value })}
                         />
-                        {authErrors.email.isError && (
+                        {authErrors.email && (
                             <div className="error-message">{authErrors.email.message}</div>
                         )}
                     </div>
@@ -120,11 +92,11 @@ function Auth() {
                         name="password"
                         required
                         placeholder="Password"
-                        className={authErrors.password.isError ? 'error' : ''}
+                        className={authErrors.password ? 'error' : ''}
                         value={authData.password ?? ""}
                         onChange={(e) => setAuthData({ ...authData, password: e.target.value })}
                     />
-                    {authErrors.password.isError && (
+                    {authErrors.password && (
                         <div className="error-message">{authErrors.password.message}</div>
                     )}
                 </div>
@@ -143,6 +115,8 @@ function Auth() {
                     }
                 >{isSignup ? 'Signup' : 'Login'}</button>
             </div>
+            {globalError && <div className="global-error">{globalError}</div>}
+
             <img src="/disc-album-cover.png" className="disc-img" ref={discImgRef} />
         </form>
     );

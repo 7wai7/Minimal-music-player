@@ -6,20 +6,19 @@ import { artistFetch } from "../API/artists";
 import Loader from "../components/Loader";
 import { songsArtistFetch } from "../API/songs";
 import SongsContainerPagination from "../components/SongsContainerPagination";
+import { useUser } from "../contexts/userContext";
 
 function Artist() {
     const { login } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
+    const { logout } = useUser();
 
     const { data: artist, isLoading, error } = useQuery({
         queryKey: ['artist', login],
         queryFn: () => artistFetch(login!),
         enabled: !!login
     })
-
-    console.log(artist);
-
 
     if (error) return (
         <h2 className="fetch-error-message">
@@ -42,9 +41,14 @@ function Artist() {
 
                     {
                         artist.isOwnProfile && (
-                            <button className="upload-song-btn tr-bg" onClick={showModal}>
-                                Upload song
-                            </button>
+                            <div className="profile-controllers">
+                                <button className="upload-song-btn tr-bg" onClick={showModal}>
+                                    Upload song
+                                </button>
+                                <button className="logout-btn tr-bg" onClick={logout}>
+                                    Logout
+                                </button>
+                            </div>
                         )
                     }
                 </div>

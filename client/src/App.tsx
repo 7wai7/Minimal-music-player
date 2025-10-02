@@ -2,13 +2,14 @@ import './App.css'
 import MainBackground from './components/MainBackground'
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import Auth from './pages/Auth'
-import { UserProvider } from './contexts/userContext';
+import { useUser } from './contexts/userContext';
 import Main from './pages/Main';
 import Layout from './pages/Layout';
 import Artist from './pages/Artist';
 import type { ModalType } from './types/modal';
 
 function App() {
+	const { user } = useUser();
 	const location = useLocation();
 	const navigate = useNavigate();
 	const previousLocation = location.state?.previousLocation;
@@ -44,12 +45,16 @@ function App() {
 						}
 					/>
 
-					<Route
-						path="/artist/:login/upload"
-						element={
-							<Artist />
-						}
-					/>
+					{
+						user && (
+							<Route
+								path="/artist/:login/upload"
+								element={
+									<Artist />
+								}
+							/>
+						)
+					}
 
 					<Route
 						path="/playlist"

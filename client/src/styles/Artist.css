@@ -23,6 +23,7 @@
     font-size: 16px;
 }
 
+.artist-page .logout-btn,
 .artist-page .upload-song-btn {
     margin-top: 40px;
     border-radius: 8px;
@@ -34,6 +35,19 @@
     color: var(--theme-2);
     background-color: var(--theme);
 }
+
+.artist-page .logout-btn:hover {
+    color: var(--theme-2);
+    background-color: red;
+}
+
+.artist-page .profile-controllers {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+}
+
 
 .artist-page .avatar-wrapper {
     width: 150px;

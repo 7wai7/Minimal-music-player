@@ -11,13 +11,13 @@ export default async function fetcher<T>(promise: Promise<AxiosResponse<T>>): Pr
         const response = await promise;
         return response.data;
     } catch (err: any) {
-        console.log(err);
         if (err.response) {
             const apiError: ApiError = {
                 message: err.response.data?.message || "Unknown error",
                 status: err.response.status,
                 errors: err.response.data?.errors,
             };
+            console.log(apiError);
             throw apiError;
         } else {
             throw {

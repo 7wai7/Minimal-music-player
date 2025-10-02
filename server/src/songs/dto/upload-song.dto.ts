@@ -22,10 +22,11 @@ export class UploadSongDto {
         example: "These are the song lyrics..."
     })
     @IsOptional()
+    @Transform(({ value }) => value === '' ? undefined : value)
+    @IsString()
     @Length(3, 5000, {
         message: 'The lyrics name must be between 3 and 5000 characters long.'
     })
-    @IsString()
     readonly lyrics?: string;
 
     @ApiProperty({
@@ -35,6 +36,7 @@ export class UploadSongDto {
         example: new Date().toISOString(),
     })
     @IsOptional()
+    @Transform(({ value }) => value === '' ? undefined : value)
     @IsDate()
     readonly release_date?: Date;
 
