@@ -1,5 +1,6 @@
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import type SongDTO from "../types/song";
+import usePlaylist from "../hooks/usePlaylist";
 
 type AudioContextType = {
     audio: HTMLAudioElement;
@@ -9,14 +10,21 @@ type AudioContextType = {
     volume: number;
     isMuted: boolean;
     duration: number;
+    playlist: SongDTO[];
+    canPlayNext: boolean;
+    canPlayPrev: boolean;
     handleTime: (value: number) => void;
     handleVolume: (value: number) => void;
     handleIsMuted: (value: boolean) => void;
     setDuration: React.Dispatch<React.SetStateAction<number>>;
     togglePlay: () => void;
     playSong: (song: SongDTO) => void;
-    setOpenPanelCb: (cb: (song: SongDTO) => void) => void;
-    openPanel: (song: SongDTO) => void;
+    setPlaylist: React.Dispatch<React.SetStateAction<SongDTO[]>>;
+    addToPlaylist: (song: SongDTO) => void;
+    removeFromPlaylist: (song: SongDTO) => void;
+    setAtIndexPlaylist: (from: number, to: number) => void;
+    playPrev: () => void;
+    playNext: () => void;
 };
 
 const AudioContext = createContext<AudioContextType | null>(null);
@@ -29,40 +37,27 @@ export const useAudio = () => {
 
 export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
     const audioRef = useRef<HTMLAudioElement>(new Audio());
-    const [currentSong, setCurrentSong] = useState<SongDTO | null>(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [time, setTime] = useState(0);
     const [volume, setVolume] = useState(0.5);
     const [isMuted, setIsMuted] = useState(false);
     const [duration, setDuration] = useState(0);
+    const {
+        currentSong,
+        playlist,
+        canPlayNext,
+        canPlayPrev,
+        setCurrentSong,
+        setPlaylist,
+        add,
+        remove,
+        setAtIndex,
+        playPrev,
+        playNext
+    } = usePlaylist({ playCb: playSong });
 
-    const [openPanel, setOpenPanel] = useState<(song: SongDTO) => void>(() => {});
-
-    const handleTime = (value: number) => {
-        setTime(value);
-        audioRef.current.currentTime = value;
-    }
-
-    const handleVolume = (value: number) => {
-        setVolume(value);
-        audioRef.current.volume = value;
-        setIsMuted(value === 0);
-        audioRef.current.muted = value === 0;
-    }
-
-    const handleIsMuted = (value: boolean) => {
-        setIsMuted(value)
-        audioRef.current.muted = value;
-        setVolume(audioRef.current.volume);
-    }
-
-    const togglePlay = () => {
-        if (audioRef.current.paused) audioRef.current.play();
-        else audioRef.current.pause();
-    };
-
-    const playSong = (song: SongDTO) => {
-        if (song.id === currentSong?.id) {
+    function playSong(song: SongDTO) {
+        if (currentSong && song.id === currentSong.id) {
             togglePlay();
             return;
         }
@@ -70,44 +65,77 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
         audioRef.current.pause();
         audioRef.current.src = `/api/audio?url=${song.url}`;
         audioRef.current.load();
-        audioRef.current.play();
+        audioRef.current.oncanplay = () => {
+            audioRef.current.play();
+        };
 
         setCurrentSong(song);
     }
 
-    const setOpenPanelCb = (cb: (song: SongDTO) => void) => {
-        setOpenPanel(cb);
-    };
+    const handleTime = useCallback((value: number) => {
+        setTime(value);
+        audioRef.current.currentTime = value;
+    }, []);
+
+    const handleVolume = useCallback((value: number) => {
+        setVolume(value);
+        audioRef.current.volume = value;
+        setIsMuted(value === 0);
+        audioRef.current.muted = value === 0;
+    }, []);
+
+    const handleIsMuted = useCallback((value: boolean) => {
+        setIsMuted(value)
+        audioRef.current.muted = value;
+        setVolume(audioRef.current.volume);
+    }, []);
+
+    const togglePlay = useCallback(() => {
+        if (audioRef.current.paused) audioRef.current.play();
+        else audioRef.current.pause();
+    }, []);
 
     useEffect(() => {
-        const handlePlay = () => setIsPlaying(true);
-        const handlePause = () => setIsPlaying(false);
+        const play = () => setIsPlaying(true);
+        const pause = () => setIsPlaying(false);
         const timeupdate = () => setTime(audioRef.current.currentTime);
         const volumechange = () => setVolume(audioRef.current.volume)
-        const ended = () => {
-            setIsPlaying(!audioRef.current.paused);
-        }
         const loadedmetadata = () => {
             setTime(0);
             setDuration(audioRef.current.duration);
         }
 
-        audioRef.current.addEventListener('play', handlePlay);
-        audioRef.current.addEventListener('pause', handlePause);
+        const error = (e: ErrorEvent) => {
+            console.log('AUDIO ERROR', e);
+        }
+
+        audioRef.current.addEventListener('play', play);
+        audioRef.current.addEventListener('pause', pause);
         audioRef.current.addEventListener('timeupdate', timeupdate);
         audioRef.current.addEventListener('volumechange', volumechange);
-        audioRef.current.addEventListener('ended', ended);
         audioRef.current.addEventListener('loadedmetadata', loadedmetadata);
+        audioRef.current.addEventListener('error', error);
 
         return () => {
-            audioRef.current.removeEventListener('play', handlePlay);
-            audioRef.current.removeEventListener('pause', handlePause);
-            audioRef.current.removeEventListener('ended', ended);
+            audioRef.current.removeEventListener('play', play);
+            audioRef.current.removeEventListener('pause', pause);
             audioRef.current.removeEventListener('timeupdate', timeupdate);
             audioRef.current.removeEventListener('volumechange', volumechange);
             audioRef.current.removeEventListener('loadedmetadata', loadedmetadata);
+            audioRef.current.removeEventListener('error', error);
         };
     }, []);
+
+    useEffect(() => {
+        const ended = () => {
+            playNext();
+        }
+
+        audioRef.current.addEventListener('ended', ended);
+        return () => {
+            audioRef.current.removeEventListener('ended', ended);
+        };
+    }, [playNext]);
 
     return (
         <AudioContext.Provider value={{
@@ -118,14 +146,21 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
             volume,
             isMuted,
             duration,
+            playlist,
+            canPlayNext,
+            canPlayPrev,
             handleTime,
             handleVolume,
             handleIsMuted,
             setDuration,
             togglePlay,
             playSong,
-            setOpenPanelCb,
-            openPanel
+            setPlaylist,
+            addToPlaylist: add,
+            removeFromPlaylist: remove,
+            setAtIndexPlaylist: setAtIndex,
+            playPrev,
+            playNext
         }}>
             {children}
         </AudioContext.Provider>

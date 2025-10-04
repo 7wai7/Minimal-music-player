@@ -1,11 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UseInterceptors, UploadedFile, Query, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UseInterceptors, UploadedFile, Query, HttpException, HttpStatus, UploadedFiles } from '@nestjs/common';
 import { SongsService } from './songs.service';
 import { CreateSongDto } from './dto/create-song.dto';
 import { ReqUser } from 'src/decorators/ReqUser';
 import { UserDto } from 'src/users/dto/user.dto';
 import { ApiBody, ApiConsumes, ApiOperation, ApiQuery, ApiResponse, getSchemaPath } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.quard';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileFieldsInterceptor, FileInterceptor } from '@nestjs/platform-express';
 import { UploadSongDto } from './dto/upload-song.dto';
 import { Auth } from 'src/decorators/Auth';
 import { Op } from 'sequelize';
@@ -120,16 +120,32 @@ export class SongsController {
 	})
 	@Post("/upload-and-create")
 	@UseGuards(JwtAuthGuard)
-	@UseInterceptors(FileInterceptor('file'))
+	@UseInterceptors(
+		FileFieldsInterceptor([
+			{ name: 'file', maxCount: 1 },
+			{ name: 'file_preview', maxCount: 1 },
+		]),
+	)
 	uploadAndCreate(
 		@ReqUser() user: UserDto,
 		@Body() createSongDto: UploadSongDto,
-		@UploadedFile() file: Express.Multer.File
+		@UploadedFiles()
+		files: {
+			file?: Express.Multer.File[];
+			file_preview?: Express.Multer.File[];
+		},
 	) {
-		if (!file.mimetype.startsWith('audio/')) {
+		const file = files.file?.[0];
+		const file_preview = files.file_preview?.[0];
+
+		if (!file?.mimetype.startsWith('audio/')) {
 			throw new Error('Invalid file type. Only audio files are allowed.');
 		}
-		return this.songsService.uploadAndCreate(user.id, createSongDto, file);
+
+		if (file_preview && !file_preview.mimetype.startsWith('image/')) {
+			throw new Error('Invalid file preview type. Only image files are allowed.');
+		}
+		return this.songsService.uploadAndCreate(user.id, createSongDto, file, file_preview);
 	}
 
 	// @ApiOperation({ summary: 'Create a new song' })

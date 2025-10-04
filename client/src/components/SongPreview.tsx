@@ -2,7 +2,7 @@ import type SongDTO from "../types/song";
 import type React from "react";
 import "../styles/SongPreview.css"
 import PlayPauseBtn from "./PlayPauseBtn";
-import { Download } from "lucide-react";
+import { Download, Equal, ListEnd, ListX } from "lucide-react";
 import formatDuration from "../utils/formatDuration";
 import { useAudio } from "../contexts/AudioProvider";
 import downloadFile from "../utils/downloadFile";
@@ -11,13 +11,15 @@ import { memo } from "react";
 import formatBytes from "../utils/formatBytes";
 
 interface Props {
-    song: SongDTO
+    song: SongDTO,
+    isPlaylistModal?: boolean,
 }
 
 function SongPreview({
-    song
+    song,
+    isPlaylistModal = false,
 }: Props) {
-    const { isPlaying, currentSong, playSong } = useAudio();
+    const { isPlaying, currentSong, playSong, addToPlaylist, removeFromPlaylist } = useAudio();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -33,15 +35,30 @@ function SongPreview({
     }
 
     return (
-        <div className="song-preview tr-bg" onClick={onClick}>
+        <div className={`song-preview tr-bg ${!!currentSong && currentSong.id === song.id ? "active" : ""}`} onClick={onClick}>
             <div className="block-l">
+                {/* {
+                    isPlaylistModal && (
+                        <div
+                            className="drag-btn icon-wrapper"
+                        >
+                            <Equal
+                                size={16}
+                                color="var(--theme-3-light)"
+                            />
+                        </div>
+                    )
+                } */}
                 <PlayPauseBtn
                     isPlaying={isPlaying && !!currentSong && currentSong.id === song.id}
                     onClick={() => playSong(song)}
                 />
                 <div className="meta">
                     {
-                        !location.pathname.startsWith('/artist') &&
+                        (
+                            !location.pathname.startsWith('/artist') ||
+                            isPlaylistModal
+                        ) &&
                         <>
                             <Link to={`/artist/${song.artist.login}`}>
                                 {song.artist.login}
@@ -56,6 +73,19 @@ function SongPreview({
                 <span>{new Date(song.release_date).toLocaleDateString()}</span>
                 <span>{formatBytes(song.size)}</span>
                 <span className="duration">{formatDuration(song.duration)}</span>
+                {
+                    !isPlaylistModal && (
+                        <button
+                            onClick={() => addToPlaylist(song)}
+                            className="add-to-playlist-btn icon-wrapper tr-bg"
+                        >
+                            <ListEnd
+                                size={16}
+                                color="var(--theme)"
+                            />
+                        </button>
+                    )
+                }
                 <button
                     onClick={() => downloadFile(song.url, song.title)}
                     className="download-btn icon-wrapper tr-bg"
@@ -67,6 +97,18 @@ function SongPreview({
                         strokeLinejoin="miter"
                     />
                 </button>
+                {
+                    isPlaylistModal && (
+                        <button className="remove-from-playlist-btn icon-wrapper tr-bg" onClick={() => removeFromPlaylist(song)}>
+                            <ListX
+                                size={16}
+                                color="var(--theme)"
+                                strokeLinecap="square"
+                                strokeLinejoin="miter"
+                            />
+                        </button>
+                    )
+                }
             </div>
         </div>
     );

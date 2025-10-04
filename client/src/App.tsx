@@ -12,7 +12,7 @@ function App() {
 	const { user } = useUser();
 	const location = useLocation();
 	const navigate = useNavigate();
-	const previousLocation = location.state?.previousLocation;
+	const previousLocation = location.state?.previousLocation as Location;
 	const modalType = location.state?.modalType as ModalType | undefined;
 	const song = location.state?.song;
 
@@ -56,12 +56,12 @@ function App() {
 						)
 					}
 
-					<Route
+					{/* <Route
 						path="/playlist"
 						element={
 							<Main />
 						}
-					/>
+					/> */}
 				</Route>
 			</Routes>
 		</>

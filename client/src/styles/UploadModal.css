@@ -1,6 +1,10 @@
-.upload-form {
-    width: 100%;
+.modal-overlay.upload .modal-content {
     height: 100%;
+}
+
+.upload-form {
+    width: inherit;
+    height: inherit;
     display: flex;
     flex-direction: row;
     gap: 100px;
@@ -53,12 +57,22 @@
     background-color: var(--theme-3);
 }
 
-
 .upload-form .r {
+    width: 260px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.upload-form .tabs-wrapper {
+    flex: 1;
+}
+
+.upload-form .tab-sound-file {
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    width: 260px;
 }
 
 .upload-form .drag-drop-field {
@@ -90,6 +104,36 @@
     color: white;
     font-size: 16px;
     text-decoration: underline;
+}
+
+.upload-form .preview-img-wrapper {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.upload-form .preview-cover {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.3);
+    opacity: 0;
+    transition: opacity .2s ease-in-out;
+}
+
+.upload-form .preview-img-wrapper:hover .preview-cover {
+    opacity: 1;
+}
+
+.upload-form .preview-img {
+    width: 100%;
+    height: 100%;
 }
 
 .upload-form .selected-file .change-file-btn {

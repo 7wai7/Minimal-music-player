@@ -12,14 +12,16 @@ interface Props {
     isOpenAudioModal: boolean;
     isOpenPlaylistModal: boolean;
     closeModal: () => void;
+    setIsOpenPlaylistModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 function Footer({
     isOpenAudioModal,
     isOpenPlaylistModal,
-    closeModal
+    closeModal,
+    setIsOpenPlaylistModal
 }: Props) {
-    const { isPlaying, togglePlay, time, handleTime, duration, currentSong } = useAudio();
+    const { isPlaying, togglePlay, time, handleTime, duration, currentSong, playPrev, playNext, canPlayNext, canPlayPrev } = useAudio();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -29,8 +31,7 @@ function Footer({
     }
 
     const showPlaylistModal = () => {
-        if (isOpenPlaylistModal) closeModal();
-        else navigate(`/playlist`, { state: { previousLocation: location, modalType: "playlist" } })
+        setIsOpenPlaylistModal(!isOpenPlaylistModal);
     }
 
     const onClick = (e: React.MouseEvent) => {
@@ -58,7 +59,11 @@ function Footer({
             </div>
             <div className="audio-controllers">
                 <div className="audio-btns">
-                    <button className="skip-btn icon-wrapper">
+                    <button
+                        disabled={!canPlayPrev}
+                        className="skip-btn icon-wrapper tr-bg"
+                        onClick={playPrev}
+                    >
                         <SkipBack
                             size={16}
                             strokeLinecap="square"
@@ -69,7 +74,11 @@ function Footer({
                         isPlaying={isPlaying}
                         onClick={togglePlay}
                     />
-                    <button className="skip-btn icon-wrapper">
+                    <button
+                        disabled={!canPlayNext}
+                        className="skip-btn icon-wrapper tr-bg"
+                        onClick={playNext}
+                    >
                         <SkipForward
                             size={16}
                             strokeLinecap="square"

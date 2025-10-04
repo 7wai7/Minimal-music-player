@@ -1,4 +1,3 @@
-import { ApiProperty } from "@nestjs/swagger";
 import { BelongsTo, Column, DataType, ForeignKey, Model, Sequelize, Table } from "sequelize-typescript";
 import { User } from "./user.model";
 
@@ -12,6 +11,7 @@ interface CreationAttrs {
     size: number;
     extension: string;
     url: string;
+    preview_url?: string;
 }
 
 @Table({ tableName: 'songs', timestamps: false })
@@ -43,6 +43,9 @@ export class Song extends Model<Song, CreationAttrs> {
 
     @Column({ type: DataType.TEXT, allowNull: false })
     declare url: string;
+
+    @Column({ type: DataType.TEXT, allowNull: true })
+    declare preview_url: string;
 
     @Column({ type: DataType.DATE, allowNull: false, defaultValue: Sequelize.fn('NOW') })
     declare created_at: Date;

@@ -90,18 +90,26 @@ export class SongsService {
 	}
 
 
-	async uploadAndCreate(currentUserId: number, createSongDto: UploadSongDto, file: Express.Multer.File) {
+	async uploadAndCreate(
+		currentUserId: number,
+		createSongDto: UploadSongDto,
+		file: Express.Multer.File,
+		file_preview?: Express.Multer.File
+	) {
 		const metadata = await getAudioMetadata(file);
 		const { url } = await this.storageService.uploadFile(file);
 
-		const fileData: {
-			extension: string,
-			size: number,
-			url: string
-		} = {
+		let preview_url: string | undefined;
+		if (file_preview) {
+			const { url } = await this.storageService.uploadFile(file_preview);
+			preview_url = url;
+		}
+
+		const fileData = {
 			extension: file.originalname.split('.').pop() || '',
 			size: file.size,
 			url,
+			preview_url
 		};
 
 		return await this.create(

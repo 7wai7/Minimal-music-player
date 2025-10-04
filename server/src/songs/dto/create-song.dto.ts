@@ -40,14 +40,14 @@ export class CreateSongDto extends UploadSongDto {
     readonly extension: string;
 
     @ApiProperty({
-        description: 'URL to access the song',
-        minLength: 3,
-        maxLength: 255,
-        example: "https://example.com/songs/my-song.mp3"
-    })
-    @Length(3, 255, {
-        message: 'The url must be between 3 and 255 characters long.'
+        description: 'URL to access the song'
     })
     @IsString()
     readonly url: string;
+
+    @ApiProperty({
+        description: 'URL to access the song preview'
+    })
+    @IsString()
+    readonly preview_url?: string;
 }

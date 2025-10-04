@@ -116,10 +116,13 @@ footer {
 
 
 
+footer button[disabled] {
+    opacity: 0.5;
+}
 
 
-footer.disabled input,
-footer.disabled button {
+footer.disabled input:not(.playlist-btn),
+footer.disabled button:not(.playlist-btn) {
     opacity: 0.5;
     pointer-events: none;
 }

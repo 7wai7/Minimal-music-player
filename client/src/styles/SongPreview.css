@@ -1,5 +1,5 @@
 .song-preview {
-    background-color: #46547087;
+    background-color: #46547047;
     border-radius: 8px;
     width: 100%;
     display: flex;
@@ -14,16 +14,25 @@
     background-color: #63759987;
 }
 
+.song-preview.active {
+    background-color: #465470c1;
+}
+
 .song-preview .block-l,
 .song-preview .block-r {
     display: flex;
     flex-direction: row;
     align-items: center;
+    gap: 6px;
+}
+
+.song-preview .drag-btn {
+    margin-right: 6px;
 }
 
 .song-preview .play-pause-btn {
     width: 36px;
-    margin-right: 24px;
+    margin-right: 16px;
 }
 
 .song-preview .meta {
@@ -47,10 +56,12 @@
 
 .song-preview .block-r span {
     color: var(--theme-3-light);
-    margin-right: 16px;
+    margin-right: 10px;
 }
 
-.song-preview .download-btn {
+.song-preview .add-to-playlist-btn,
+.song-preview .download-btn,
+.song-preview .remove-from-playlist-btn {
     margin-right: 0;
     width: 40px;
     height: 36px;
@@ -58,6 +69,24 @@
     border-radius: 8px;
 }
 
+.song-preview .add-to-playlist-btn svg,
+.song-preview .download-btn svg,
+.song-preview .remove-from-playlist-btn svg {
+    transition: stroke .2s ease-in-out;
+}
+
+
+.song-preview .add-to-playlist-btn:hover,
 .song-preview .download-btn:hover {
     background-color: rgba(var(--theme-rgb), 0.3);
+}
+
+.song-preview .add-to-playlist-btn:hover svg,
+.song-preview .download-btn:hover svg,
+.song-preview .remove-from-playlist-btn:hover svg {
+    stroke: white;
+}
+
+.song-preview .remove-from-playlist-btn:hover {
+    background-color: rgba(255, 0, 0, 0.7);
 }

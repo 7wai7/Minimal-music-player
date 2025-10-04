@@ -2,14 +2,15 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import { AudioProvider } from "../contexts/AudioProvider";
-import Modal from "../components/Modal";
+import Modal from "../components/modals/Modal";
 import AudioModal from "../components/modals/AudioModal";
 import UploadModal from "../components/modals/UploadModal";
 import type { ModalType } from "../types/modal";
 import PlaylistModal from "../components/modals/PlaylistModal";
+import { useEffect, useState } from "react";
 
 interface Props {
-    previousLocation: any,
+    previousLocation: Location,
     modalType?: ModalType
 }
 
@@ -19,21 +20,24 @@ function Layout({
 }: Props) {
     const location = useLocation();
     const navigate = useNavigate();
-
-    console.log(modalType);
-    
+    const [isOpenPlaylistModal, setIsOpenPlaylistModal] = useState(false);
 
     const isOpenAudioModal = !!(modalType == "audio" || location.pathname.startsWith("/song"));
     const isOpenUploadModal = !!(modalType === "upload" || location.pathname.split("/")[3] === "upload");
-    const isOpenPlaylistModal = !!(modalType === "playlist" || location.pathname.startsWith("/playlist"));
+    // const isOpenPlaylistModal = !!(modalType === "playlist" || location.pathname.startsWith("/playlist"));
 
     const closeModal = () => {
-        if (previousLocation) {
+        if (isOpenPlaylistModal) setIsOpenPlaylistModal(false);
+        else if (previousLocation) {
             navigate(previousLocation.pathname);
         } else {
             navigate("/");
         }
     }
+
+    useEffect(() => {
+        if (isOpenAudioModal || isOpenUploadModal) setIsOpenPlaylistModal(false);
+    }, [isOpenAudioModal, isOpenUploadModal]);
 
     return (
         <AudioProvider>
@@ -52,7 +56,9 @@ function Layout({
                     isOpen={isOpenUploadModal}
                     className="upload"
                 >
-                    <UploadModal />
+                    <UploadModal
+                        closeModal={closeModal}
+                    />
                 </Modal>
 
                 <Modal
@@ -73,6 +79,7 @@ function Layout({
                     isOpenAudioModal={isOpenAudioModal}
                     isOpenPlaylistModal={isOpenPlaylistModal}
                     closeModal={closeModal}
+                    setIsOpenPlaylistModal={setIsOpenPlaylistModal}
                 />
             </div>
         </AudioProvider>

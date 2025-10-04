@@ -34,9 +34,10 @@ export class StorageController {
     @UseGuards(JwtAuthGuard)
     async getDownloadLink(
         @Query('url') url: string,
-        @Query('originalname') originalname: string
+        @Query('originalname') originalname: string,
+        @Query('mode') mode?: "inline" | "download"
     ) {
-        return this.storageService.getDownloadLink(url, originalname);
+        return this.storageService.getDownloadLink(url, originalname, mode);
     }
 
 

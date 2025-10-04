@@ -1,5 +1,5 @@
 import { memo, type JSX } from 'react';
-import "../styles/Modal.css";
+import "../../styles/Modal.css";
 
 interface Props {
     children: JSX.Element | JSX.Element[];
@@ -16,8 +16,10 @@ const Modal = ({
 
     // return ReactDOM.createPortal(
     return <div className={`modal-overlay ${className} ${isOpen ? "show" : ""}`}>
-        <div className='modal-content'>
-            {children}
+        <div className='modal-content-wrapper'>
+            <div className='modal-content'>
+                {children}
+            </div>
         </div>
     </div>
     // document.getElementById('modal-root')!
