@@ -48,7 +48,7 @@ export class UsersService {
         return await User.findAll({
             where: { ...options },
             attributes: ['id', 'login'],
-            order: [['created_at', 'DESC']],
+            order: [['createdAt', 'DESC']],
             limit
         });
     }
