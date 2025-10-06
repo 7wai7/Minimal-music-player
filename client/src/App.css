@@ -165,3 +165,19 @@ body {
   font-size: 16px;
   width: 100%;
 }
+
+
+.preview-img-wrapper {
+  width: inherit;
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-img {
+    height: 100%;
+}

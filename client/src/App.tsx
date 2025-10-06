@@ -1,25 +1,27 @@
 import './App.css'
 import MainBackground from './components/MainBackground'
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import Auth from './pages/Auth'
 import { useUser } from './contexts/userContext';
 import Main from './pages/Main';
 import Layout from './pages/Layout';
 import Artist from './pages/Artist';
-import type { ModalType } from './types/modal';
+import GlobalModals from './components/GlobalModals';
 
 function App() {
 	const { user } = useUser();
-	const location = useLocation();
-	const navigate = useNavigate();
-	const previousLocation = location.state?.previousLocation as Location;
-	const modalType = location.state?.modalType as ModalType | undefined;
-	const song = location.state?.song;
+
+
+	// useEffect(() => {
+	// 	if (location.pathname.startsWith("/song")) useModalStore.getState().open("audio");
+	// 	if (location.pathname.split("/")[3] === "upload") useModalStore.getState().open("upload");
+	// }, [location]);
 
 	return (
 		<>
 			<MainBackground />
-			<Routes location={previousLocation || location}>
+			<GlobalModals />
+			<Routes /* location={useNavigationStore.getState().previousLocation || location} */>
 				<Route
 					path="/auth"
 					element={<Auth />}
@@ -28,10 +30,7 @@ function App() {
 				<Route
 					path="/"
 					element={
-						<Layout
-							previousLocation={previousLocation}
-							modalType={modalType}
-						/>
+						<Layout />
 					}
 				>
 					<Route index element={<Main />} />
@@ -55,13 +54,6 @@ function App() {
 							/>
 						)
 					}
-
-					{/* <Route
-						path="/playlist"
-						element={
-							<Main />
-						}
-					/> */}
 				</Route>
 			</Routes>
 		</>

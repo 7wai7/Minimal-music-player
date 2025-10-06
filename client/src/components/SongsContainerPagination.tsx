@@ -55,7 +55,12 @@ function SongsContainerPagination({
         <>
             <div className="songs-container">
                 {songs.rows.map((s) => (
-                    <SongPreview key={s.id} song={s} />
+                    <SongPreview
+                        key={s.id}
+                        song={s}
+                        listKey={`${queryKey.join(' ')} ${currentPage}`}
+                        list={songs.rows}
+                    />
                 ))}
             </div>
             <Pagination

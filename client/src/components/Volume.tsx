@@ -1,9 +1,12 @@
 import { Volume as Volume0, Volume1, Volume2, VolumeOff } from "lucide-react";
 import Slider from "./Slider";
-import { useAudio } from "../contexts/AudioProvider";
+import { useAudioStore } from "../stores/AudioStore";
 
 function Volume() {
-    const { volume, handleVolume, isMuted, handleIsMuted } = useAudio();
+    const volume = useAudioStore(state => state.volume);
+    const handleVolume = useAudioStore(state => state.handleVolume);
+    const isMuted = useAudioStore(state => state.isMuted);
+    const handleIsMuted = useAudioStore(state => state.handleIsMuted);
 
     const getVolumeIcon = () => {
         if (isMuted || volume === 0) return VolumeOff;
@@ -16,8 +19,8 @@ function Volume() {
 
     return (
         <div className="volume-wrapper">
-            <button 
-                onClick={() => handleIsMuted(!isMuted)} 
+            <button
+                onClick={() => handleIsMuted(!isMuted)}
                 className="mute-btn icon-wrapper"
             >
                 <Icon size={18} color="var(--theme-3-light)" />

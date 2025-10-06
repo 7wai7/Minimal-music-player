@@ -58,6 +58,7 @@ export class SongsService {
 		const query: FindOptions<Song> = {
 			where: { ...options },
 			include: this.songInclude,
+			order: [['created_at', 'DESC']],
 			limit
 		};
 

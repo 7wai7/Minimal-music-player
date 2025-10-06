@@ -1,17 +1,19 @@
+import { memo } from "react";
 import "../styles/PlayPauseBtn.css"
 import { Pause, Play } from "lucide-react";
 
-interface Props {
+interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     isPlaying: boolean,
-    onClick: () => void
+    onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
 function PlayPauseBtn({
     isPlaying,
-    onClick
+    onClick,
+    ...props
 }: Props) {
     return (
-        <button onClick={onClick} className={`tr-bg play-pause-btn icon-wrapper ${isPlaying ? "pause" : "play"}`}>
+        <button {...props} onClick={onClick} className={`tr-bg play-pause-btn icon-wrapper ${isPlaying ? "pause" : "play"}`}>
             {
                 isPlaying
                     ? <Pause
@@ -29,4 +31,4 @@ function PlayPauseBtn({
     );
 }
 
-export default PlayPauseBtn;
+export default memo(PlayPauseBtn);

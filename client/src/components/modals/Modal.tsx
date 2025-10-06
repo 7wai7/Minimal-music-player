@@ -1,29 +1,38 @@
-import { memo, type JSX } from 'react';
+import { memo, useEffect, useRef, type JSX } from 'react';
 import "../../styles/Modal.css";
+import type { ModalType } from '../../types/modal';
+import { useModalStore } from '../../stores/ModalStore';
 
 interface Props {
     children: JSX.Element | JSX.Element[];
-    isOpen: boolean;
-    className: string;
+    type: ModalType;
 }
 
 const Modal = ({
     children,
-    isOpen,
-    className
+    type
 }: Props) => {
-    // console.log("render modal");
+    const overlayRef = useRef<HTMLDivElement>(null);
 
-    // return ReactDOM.createPortal(
-    return <div className={`modal-overlay ${className} ${isOpen ? "show" : ""}`}>
-        <div className='modal-content-wrapper'>
-            <div className='modal-content'>
-                {children}
+    useEffect(() => {
+        const unsubscribe = useModalStore.subscribe((state, prev) => {
+            if (state[type] !== prev[type] && overlayRef.current) {
+                if (state[type]) overlayRef.current.classList.add("show");
+                else overlayRef.current.classList.remove("show");
+            }
+        });
+        return unsubscribe;
+    }, []);
+
+    return (
+        <div ref={overlayRef} className={`modal-overlay ${type}`}>
+            <div className='modal-content-wrapper'>
+                <div className={`modal-content ${type}`}>
+                    {children}
+                </div>
             </div>
         </div>
-    </div>
-    // document.getElementById('modal-root')!
-    // );
+    )
 };
 
 export default memo(Modal);

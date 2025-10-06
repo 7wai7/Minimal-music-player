@@ -28,6 +28,9 @@ header nav .nav-item {
     position: relative;
 }
 
+header .return-btn.hide {
+    display: none !important;
+}
 
 header nav a,
 header nav button {

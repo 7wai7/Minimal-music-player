@@ -26,7 +26,12 @@ function SongsContainer({
     return (
         <div className="songs-container">
             {songs.map((s) => (
-                <SongPreview key={s.id} song={s} />
+                <SongPreview
+                    key={s.id}
+                    song={s}
+                    listKey={`songs ${queryKey.join(" ")}`}
+                    list={songs}
+                />
             ))}
         </div>
     );

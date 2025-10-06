@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { useAudio } from "../../contexts/AudioProvider";
 import "../../styles/PlaylistModal.css";
 import SongPreview from "../SongPreview";
+import { useAudioStore } from "../../stores/AudioStore";
 
 function PlaylistModal() {
-    const { playlist, setAtIndexPlaylist } = useAudio();
+    const playlist = useAudioStore(state => state.playlist);
+    const setAtIndexPlaylist = useAudioStore(state => state.setAtIndexPlaylist);
     const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
     const handleDragStart = (index: number) => {

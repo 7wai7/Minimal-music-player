@@ -106,15 +106,6 @@
     text-decoration: underline;
 }
 
-.upload-form .preview-img-wrapper {
-    position: relative;
-    aspect-ratio: 1 / 1;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 .upload-form .preview-cover {
     position: absolute;
     width: 100%;
@@ -129,11 +120,6 @@
 
 .upload-form .preview-img-wrapper:hover .preview-cover {
     opacity: 1;
-}
-
-.upload-form .preview-img {
-    width: 100%;
-    height: 100%;
 }
 
 .upload-form .selected-file .change-file-btn {

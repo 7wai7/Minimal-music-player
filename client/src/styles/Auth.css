@@ -75,6 +75,21 @@ body:has(.auth-form) {
     background: rgb(90, 90, 90);
 }
 
+.auth-form .global-error {
+    align-self: center;
+    position: absolute;
+    inset: auto;
+    top: 50%;
+
+    height: 40px;
+    line-height: 40px;
+    color: red;
+    font-size: 24px;
+    font-weight: 500;
+    background-color: #3a84f486;
+    text-align: center;
+}
+
 
 .auth-form .disc-img {
     position: absolute;

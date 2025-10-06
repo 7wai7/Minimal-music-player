@@ -1,37 +1,60 @@
-import { Download, ListMusic, SkipBack, SkipForward } from "lucide-react";
-import "../styles/Footer.css"
-import PlayPauseBtn from "./PlayPauseBtn";
-import Volume from "./Volume";
-import Slider from "./Slider";
-import { useAudio } from "../contexts/AudioProvider";
-import formatDuration from "../utils/formatDuration";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Download, ListMusic } from "lucide-react";
+import { Link } from "react-router-dom";
+import "../styles/Footer.css";
 import downloadFile from "../utils/downloadFile";
+import AudioControllersBtns from "./AudioControllersBtns";
+import AudioSlider from "./AudioSlider";
+import Volume from "./Volume";
+import { useCallback, useEffect, useRef } from "react";
+import { useAudioStore } from "../stores/AudioStore";
+import { useModalStore } from "../stores/ModalStore";
 
-interface Props {
-    isOpenAudioModal: boolean;
-    isOpenPlaylistModal: boolean;
-    closeModal: () => void;
-    setIsOpenPlaylistModal: React.Dispatch<React.SetStateAction<boolean>>
-}
+function Footer() {
+    const { open, close, toggle, setAudioSong } = useModalStore.getState();
+    const footerRef = useRef<HTMLElement | null>(null);
+    const metaRef = useRef<HTMLDivElement | null>(null);
+    const placeholderRef = useRef<HTMLDivElement | null>(null);
 
-function Footer({
-    isOpenAudioModal,
-    isOpenPlaylistModal,
-    closeModal,
-    setIsOpenPlaylistModal
-}: Props) {
-    const { isPlaying, togglePlay, time, handleTime, duration, currentSong, playPrev, playNext, canPlayNext, canPlayPrev } = useAudio();
-    const navigate = useNavigate();
-    const location = useLocation();
+    useEffect(() => {
+        const unsubscribe = useAudioStore.subscribe((state) => {
+            if (!state.currentSong) {
+                footerRef.current?.classList.add("disabled");
+                metaRef.current?.classList.add('hidden');
+                placeholderRef.current?.classList.remove('hidden');
+            }
+            else {
+                footerRef.current?.classList.remove("disabled");
+                metaRef.current?.classList.remove('hidden');
+                placeholderRef.current?.classList.add('hidden');
+            }
+        });
+        return unsubscribe;
+    }, []);
 
-    const showAudioModal = () => {
-        if (isOpenAudioModal) closeModal();
-        else if (currentSong) navigate(`/song/${currentSong.id}`, { state: { previousLocation: location, modalType: "audio", currentSong } })
-    }
+    const showAudioModal = useCallback(() => {
+        const currentSong = useAudioStore.getState().currentSong;
+        const isOpen = useModalStore.getState().audio;
+
+        if (isOpen) {
+            close();
+
+            if (currentSong?.id !== useModalStore.getState().audioSong?.id) {
+                setTimeout(() => {
+                    if (currentSong) {
+                        setAudioSong(currentSong);
+                        open("audio");
+                    }
+                }, 200);
+            }
+        }
+        else {
+            if (currentSong) setAudioSong(currentSong);
+            open("audio");
+        }
+    }, []);
 
     const showPlaylistModal = () => {
-        setIsOpenPlaylistModal(!isOpenPlaylistModal);
+        toggle("playlist");
     }
 
     const onClick = (e: React.MouseEvent) => {
@@ -46,64 +69,16 @@ function Footer({
     }
 
     return (
-        <footer className={!currentSong ? "disabled" : ""} onClick={onClick}>
-            <div className="audio-slider-wrapper">
-                <span className="time">{formatDuration(time)}</span>
-                <Slider
-                    className="audio-slider"
-                    value={time}
-                    setValue={handleTime}
-                    max={duration}
-                />
-                <span className="time">{formatDuration(duration)}</span>
-            </div>
+        <footer ref={footerRef} onClick={onClick} className="disabled">
+            <AudioSlider />
             <div className="audio-controllers">
                 <div className="audio-btns">
-                    <button
-                        disabled={!canPlayPrev}
-                        className="skip-btn icon-wrapper tr-bg"
-                        onClick={playPrev}
-                    >
-                        <SkipBack
-                            size={16}
-                            strokeLinecap="square"
-                            strokeLinejoin="miter"
-                        />
-                    </button>
-                    <PlayPauseBtn
-                        isPlaying={isPlaying}
-                        onClick={togglePlay}
-                    />
-                    <button
-                        disabled={!canPlayNext}
-                        className="skip-btn icon-wrapper tr-bg"
-                        onClick={playNext}
-                    >
-                        <SkipForward
-                            size={16}
-                            strokeLinecap="square"
-                            strokeLinejoin="miter"
-                        />
-                    </button>
+                    <AudioControllersBtns />
                     <Volume />
                 </div>
-                {currentSong ? (
-                    <div className="meta">
-                        <Link to={`/artist/${currentSong.artist.login}`}>
-                            {currentSong.artist.login}
-                        </Link>
-                        <span>-</span>
-                        <button
-                            onClick={showAudioModal}
-                            className="song-title"
-                        >
-                            {currentSong.title}
-                        </button>
-                    </div>
-                ) : (
-                    <p className="placeholder">No song playing</p>
-                )}
-
+                <SongMeta
+                    showAudioModal={showAudioModal}
+                />
                 <div className="right-block">
                     <button
                         onClick={showPlaylistModal}
@@ -119,6 +94,7 @@ function Footer({
 
                     <button
                         onClick={() => {
+                            const currentSong = useAudioStore.getState().currentSong;
                             if (currentSong) downloadFile(currentSong.url, currentSong.title);
                         }}
                         className="download-btn tr-bg icon-wrapper"
@@ -134,6 +110,35 @@ function Footer({
             </div>
         </footer>
     );
+}
+
+function SongMeta({
+    showAudioModal
+}: {
+    showAudioModal: () => void
+}) {
+    const currentSong = useAudioStore(s => s.currentSong);
+
+    return (
+        <>
+            {currentSong ? (
+                <div className="meta">
+                    <Link to={`/artist/${currentSong.artist.login}`}>
+                        {currentSong.artist.login}
+                    </Link>
+                    <span>-</span>
+                    <button
+                        onClick={showAudioModal}
+                        className="song-title"
+                    >
+                        {currentSong.title}
+                    </button>
+                </div>
+            ) : (
+                <p className="placeholder">No song playing</p>
+            )}
+        </>
+    )
 }
 
 export default Footer;

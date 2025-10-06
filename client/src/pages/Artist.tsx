@@ -1,4 +1,4 @@
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import "../styles/Artist.css"
 import Avatar from "../components/Avatar";
 import { useQuery } from "@tanstack/react-query";
@@ -7,11 +7,10 @@ import Loader from "../components/Loader";
 import { songsArtistFetch } from "../API/songs";
 import SongsContainerPagination from "../components/SongsContainerPagination";
 import { useUser } from "../contexts/userContext";
+import { useModalStore } from "../stores/ModalStore";
 
 function Artist() {
     const { login } = useParams();
-    const navigate = useNavigate();
-    const location = useLocation();
     const { logout } = useUser();
 
     const { data: artist, isLoading, error } = useQuery({
@@ -28,7 +27,7 @@ function Artist() {
     if (isLoading || !artist) return <Loader />
 
     const showModal = () => {
-        navigate(`/artist/${login}/upload`, { state: { previousLocation: location, modalType: 'upload' } })
+        useModalStore.getState().toggle("upload");
     }
 
     return (

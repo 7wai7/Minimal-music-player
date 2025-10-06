@@ -2,26 +2,74 @@ import type SongDTO from "../types/song";
 import type React from "react";
 import "../styles/SongPreview.css"
 import PlayPauseBtn from "./PlayPauseBtn";
-import { Download, Equal, ListEnd, ListX } from "lucide-react";
+import { Download, ListEnd, ListX } from "lucide-react";
 import formatDuration from "../utils/formatDuration";
-import { useAudio } from "../contexts/AudioProvider";
 import downloadFile from "../utils/downloadFile";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { memo } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { memo, useEffect, useRef, useState } from "react";
 import formatBytes from "../utils/formatBytes";
+import { useAudioStore } from "../stores/AudioStore";
+import { useModalStore } from "../stores/ModalStore";
+
+function PlayPauseBtnPreview({
+    song,
+    onClick
+}: {
+    song: SongDTO,
+    onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+}) {
+    const [isPlaying, setIsPlaying] = useState(false);
+    const playSong = useAudioStore(state => state.playSong);
+
+    useEffect(() => {
+        const unsubscribe = useAudioStore.subscribe((state) => {
+            setIsPlaying(state.isPlaying && !!state.currentSong && state.currentSong.id === song.id);
+        });
+        return unsubscribe;
+    }, []);
+
+    return (
+        <PlayPauseBtn
+            isPlaying={isPlaying}
+            onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+                playSong(song);
+                onClick?.(e);
+            }}
+        />
+    )
+}
 
 interface Props {
     song: SongDTO,
     isPlaylistModal?: boolean,
+    listKey?: string | null,
+    list?: SongDTO[]
 }
 
 function SongPreview({
     song,
     isPlaylistModal = false,
+    listKey,
+    list
 }: Props) {
-    const { isPlaying, currentSong, playSong, addToPlaylist, removeFromPlaylist } = useAudio();
-    const navigate = useNavigate();
+    const addToPlaylist = useAudioStore(state => state.addToPlaylist);
+    const removeFromPlaylist = useAudioStore(state => state.removeFromPlaylist);
+    const setPlaylistByKey = useAudioStore(state => state.setPlaylistByKey);
+    const { open, setAudioSong } = useModalStore.getState();
+    const ref = useRef<HTMLDivElement | null>(null);
     const location = useLocation();
+
+    useEffect(() => {
+        const unsubscribe = useAudioStore.subscribe((state) => {
+            if (!ref.current) return;
+
+            if (!!state.currentSong && state.currentSong.id === song.id) {
+                ref.current.classList.add("active");
+            }
+            else ref.current.classList.remove("active");
+        });
+        return unsubscribe;
+    }, []);
 
     const onClick = (e: React.MouseEvent) => {
         // Якщо клік по посиланню або кнопці — нічого не робимо (дозволяємо нормальну поведінку)
@@ -31,11 +79,12 @@ function SongPreview({
         // додатково перевірити dropdown, input тощо:
         if ((e.target as HTMLElement).closest('.dropdown-menu-container')) return;
 
-        // navigate(`/song/${song.id}`, { state: { previousLocation: location, song } })
+        setAudioSong(song);
+        open('audio');
     }
 
     return (
-        <div className={`song-preview tr-bg ${!!currentSong && currentSong.id === song.id ? "active" : ""}`} onClick={onClick}>
+        <div ref={ref} className={`song-preview tr-bg`} onClick={onClick}>
             <div className="block-l">
                 {/* {
                     isPlaylistModal && (
@@ -49,9 +98,13 @@ function SongPreview({
                         </div>
                     )
                 } */}
-                <PlayPauseBtn
-                    isPlaying={isPlaying && !!currentSong && currentSong.id === song.id}
-                    onClick={() => playSong(song)}
+                <PlayPauseBtnPreview
+                    song={song}
+                    onClick={() => {
+                        if(listKey && list && list.length > 0) {
+                            setPlaylistByKey(listKey, list);
+                        }
+                    }}
                 />
                 <div className="meta">
                     {
@@ -66,7 +119,7 @@ function SongPreview({
                             <span>-</span>
                         </>
                     }
-                    <button className="song-title">{song.title}</button>
+                    <span className="song-title">{song.title}</span>
                 </div>
             </div>
             <div className="block-r">
