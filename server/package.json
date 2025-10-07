@@ -22,10 +22,10 @@
   "dependencies": {
     "@ffprobe-installer/ffprobe": "^2.1.2",
     "@google-cloud/storage": "^7.17.1",
-    "@nestjs/common": "^11.0.1",
-    "@nestjs/core": "^11.0.1",
+    "@nestjs/common": "^11.1.6",
+    "@nestjs/core": "^11.1.6",
     "@nestjs/jwt": "^11.0.0",
-    "@nestjs/platform-express": "^11.0.1",
+    "@nestjs/platform-express": "^11.1.6",
     "@nestjs/sequelize": "^11.0.0",
     "@nestjs/swagger": "^11.2.0",
     "@types/cookie-parser": "^1.4.9",
