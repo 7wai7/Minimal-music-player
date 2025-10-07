@@ -6,7 +6,7 @@ import AudioControllersBtns from "./AudioControllersBtns";
 import AudioSlider from "./AudioSlider";
 import Volume from "./Volume";
 import { useCallback, useEffect, useRef } from "react";
-import { useAudioStore } from "../stores/AudioStore";
+import { useAudioStore, type AudioStore } from "../stores/AudioStore";
 import { useModalStore } from "../stores/ModalStore";
 
 function Footer() {
@@ -16,7 +16,7 @@ function Footer() {
     const placeholderRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-        const unsubscribe = useAudioStore.subscribe((state) => {
+        const subscribe = (state: AudioStore) => {
             if (!state.currentSong) {
                 footerRef.current?.classList.add("disabled");
                 metaRef.current?.classList.add('hidden');
@@ -27,7 +27,10 @@ function Footer() {
                 metaRef.current?.classList.remove('hidden');
                 placeholderRef.current?.classList.add('hidden');
             }
-        });
+        }
+
+        subscribe(useAudioStore.getState());
+        const unsubscribe = useAudioStore.subscribe(subscribe);
         return unsubscribe;
     }, []);
 

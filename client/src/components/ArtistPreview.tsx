@@ -12,8 +12,12 @@ function ArtistPreview({
 }: Props) {
     return (
         <div className="artist-preview">
-            <Avatar user={artist} />
-            <Link to={`/artist/${artist.id}`}>
+            <Avatar
+                src={artist.profile.avatar_url}
+                alt={artist.login}
+                linkTo={`/artist/${artist.login}`}
+            />
+            <Link to={`/artist/${artist.login}`}>
                 <span className="title">{artist.login}</span>
             </Link>
         </div>

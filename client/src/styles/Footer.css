@@ -121,8 +121,8 @@ footer button[disabled] {
 }
 
 
-footer.disabled input:not(.playlist-btn),
-footer.disabled button:not(.playlist-btn) {
+footer.disabled input:not(.playlist-btn):not(.volume-wrapper input),
+footer.disabled button:not(.playlist-btn):not(.volume-wrapper button) {
     opacity: 0.5;
     pointer-events: none;
 }

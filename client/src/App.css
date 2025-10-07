@@ -133,12 +133,8 @@ body {
   }
 }
 
-.avatar-wrapper,
 .avatar-wrapper {
-  width: 100px;
-  aspect-ratio: 1 / 1;
-  border-radius: 50%;
-  overflow: hidden;
+  width: 100px !important;
 }
 
 .avatar-wrapper.default {
@@ -173,11 +169,28 @@ body {
   aspect-ratio: 1 / 1;
   border-radius: 50%;
   overflow: hidden;
+
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .preview-img {
-    height: 100%;
+  height: 100%;
+}
+
+.preview-cover {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.3);
+  opacity: 0;
+  transition: opacity .2s ease-in-out;
+}
+
+.preview-img-wrapper:hover .preview-cover {
+  opacity: 1;
 }

@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import type SongDTO from "../types/song";
 
-type AudioStore = {
+export type AudioStore = {
     audio: HTMLAudioElement;
 
     // Плейлист

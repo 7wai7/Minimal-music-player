@@ -27,7 +27,7 @@ const Modal = ({
     return (
         <div ref={overlayRef} className={`modal-overlay ${type}`}>
             <div className='modal-content-wrapper'>
-                <div className={`modal-content ${type}`}>
+                <div className={`modal-content`}>
                     {children}
                 </div>
             </div>

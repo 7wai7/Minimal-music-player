@@ -23,7 +23,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         fetchLogout()
             .then(() => {
                 setUser(null);
-                navigate('/auth');
+                navigate('/');
             })
             .catch((err) => console.error(err));
     };
@@ -33,10 +33,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
             .then((user) => {
                 setUser(user);
             })
-            .catch((err) => {
-                console.error(err)
+            .catch(() => {
                 setUser(null);
-                navigate('/auth');
             });
     }, []);
 

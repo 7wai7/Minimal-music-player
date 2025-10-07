@@ -1,4 +1,4 @@
-import ControlledField, { type ControlledFieldProps } from "../ControlledField";
+import ControlledField, { type ControlledFieldProps } from "./ControlledField";
 
 export function Input<T extends object>({
     store,

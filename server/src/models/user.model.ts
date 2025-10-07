@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Column, DataType, HasMany, Model, Sequelize, Table } from "sequelize-typescript";
+import { Column, DataType, HasMany, HasOne, Model, Sequelize, Table } from "sequelize-typescript";
 import { Song } from "./song.model";
+import { Profile } from "./profile.model";
 
 interface UserCreationAttrs {
 	login: string;
@@ -58,12 +59,9 @@ export class User extends Model<User, UserCreationAttrs> {
 	}
 
 
+	@HasOne(() => Profile, { as: 'profile' })
+	profile: Profile;
 
-	@ApiProperty({
-		description: 'Список пісень, створених користувачем',
-		type: () => [Song],
-		required: false
-	})
 	@HasMany(() => Song, { as: 'songs' })
 	songs: Song[];
 }

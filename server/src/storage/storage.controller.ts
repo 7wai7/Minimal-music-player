@@ -31,7 +31,6 @@ export class StorageController {
     })
     @ApiCookieAuth('token')
     @Get('/download')
-    @UseGuards(JwtAuthGuard)
     async getDownloadLink(
         @Query('url') url: string,
         @Query('originalname') originalname: string,

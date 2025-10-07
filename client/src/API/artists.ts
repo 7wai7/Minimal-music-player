@@ -17,3 +17,12 @@ export async function artistsFetch(limit?: number): Promise<UserDTO[]> {
         })
     )
 }
+
+export async function changeAvatarFetch(file: File): Promise<{ url: string }> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return fetcher(
+        api.post('/api/users/change-avatar', formData)
+    )
+}

@@ -1,6 +1,6 @@
 import { useAudioStore } from "../stores/AudioStore";
 import formatDuration from "../utils/formatDuration";
-import Slider from "./Slider";
+import Slider from "./ui/Slider";
 
 function AudioSlider() {
     const time = useAudioStore(state => state.time);

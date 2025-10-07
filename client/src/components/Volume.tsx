@@ -1,5 +1,5 @@
 import { Volume as Volume0, Volume1, Volume2, VolumeOff } from "lucide-react";
-import Slider from "./Slider";
+import Slider from "./ui/Slider";
 import { useAudioStore } from "../stores/AudioStore";
 
 function Volume() {

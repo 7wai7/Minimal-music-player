@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { RegisterUserDto } from 'src/auth/dto/register-user.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.quard';
@@ -6,6 +6,7 @@ import { ReqUser } from 'src/decorators/ReqUser';
 import { UserDto } from './dto/user.dto';
 import { ApiTags, ApiOperation, ApiParam, ApiBearerAuth, ApiBody, ApiResponse } from '@nestjs/swagger';
 import { Auth } from 'src/decorators/Auth';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('users')
 export class UsersController {
@@ -66,5 +67,22 @@ export class UsersController {
 	@Get('find/by-login')
 	findUsersByLogin(@ReqUser() user: UserDto, @Param('login') login: string) {
 		return this.usersService.findUsersByLogin(user.id, login);
+	}
+
+
+
+
+	@Post("/change-avatar")
+	@UseGuards(JwtAuthGuard)
+	@UseInterceptors(FileInterceptor('file'))
+	uploadAndCreate(
+		@ReqUser() user: UserDto,
+		@UploadedFile() file: Express.Multer.File
+	) {
+		if (!file.mimetype.startsWith('image/')) {
+			throw new Error('Invalid file type. Only image files are allowed.');
+		}
+
+		return this.usersService.changeAvatar(user.id, file);
 	}
 }

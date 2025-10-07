@@ -106,22 +106,6 @@
     text-decoration: underline;
 }
 
-.upload-form .preview-cover {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(255, 255, 255, 0.3);
-    opacity: 0;
-    transition: opacity .2s ease-in-out;
-}
-
-.upload-form .preview-img-wrapper:hover .preview-cover {
-    opacity: 1;
-}
-
 .upload-form .selected-file .change-file-btn {
     color: white;
     background: var(--theme);

@@ -1,4 +1,4 @@
-import "../styles/Slider.css"
+import "../../styles/Slider.css"
 
 interface Props {
     className?: string,

@@ -9,6 +9,7 @@ import { UsersModule } from './users/users.module';
 import { SongsModule } from './songs/songs.module';
 import { JwtModule } from '@nestjs/jwt';
 import { StorageModule } from './storage/storage.module';
+import { Profile } from './models/profile.model';
 dotenv.config();
 
 @Module({
@@ -22,6 +23,7 @@ dotenv.config();
 			database: process.env.POSTGRES_DB,
 			models: [
 				User,
+				Profile,
 				Song
 			],
 			autoLoadModels: true,
