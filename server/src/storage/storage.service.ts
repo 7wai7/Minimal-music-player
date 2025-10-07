@@ -11,8 +11,10 @@ export class StorageService {
     storage: Storage;
 
     constructor() {
+        const credentials = JSON.parse(process.env.GOOGLE_CLOUD_CREDENTIALS!);
         this.storage = new Storage({
-            keyFilename: path.join(process.cwd(), 'keys', 'social-network-uploads-4fb82798ee46.json'),
+            // keyFilename: path.join(process.cwd(), 'keys', 'social-network-uploads-4fb82798ee46.json'),
+            credentials,
             projectId: process.env.GCS_BUCKET_NAME,
         })
     }

@@ -8,6 +8,14 @@ import { UserProvider } from './contexts/userContext.tsx'
 
 const client = new QueryClient()
 
+if (import.meta.env.DEV) {
+  const script = document.createElement("script");
+  script.src = "//unpkg.com/react-scan/dist/auto.global.js";
+  script.crossOrigin = "anonymous";
+  document.head.appendChild(script);
+}
+
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={client}>

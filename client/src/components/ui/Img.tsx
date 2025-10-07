@@ -1,5 +1,5 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
+import api from "../../API/axios";
 
 interface ImgProps extends React.ImgHTMLAttributes<HTMLImageElement> {
     fileUrl?: string;
@@ -21,7 +21,7 @@ export default function Img({
 
         (async () => {
             try {
-                const res = await axios(
+                const res = await api(
                     `/api/storage/download?url=${encodeURIComponent(fileUrl)}&mode=inline`
                 );
                 if (!cancelled) setSrc(res.data.url);
