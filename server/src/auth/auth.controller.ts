@@ -39,15 +39,13 @@ export class AuthController {
     })
     @Post("/login")
     async login(@Body() userDto: LoginUserDto, @Res() res: Response) {
-        console.log(userDto);
-
         const { token, user } = await this.authService.login(userDto);
 
         // Set the JWT as an HttpOnly cookie for security
         res.cookie('token', token, {
             httpOnly: true, // Prevents client-side JavaScript access
             secure: process.env.NODE_ENV === 'production', // Use secure in production (HTTPS)
-            sameSite: 'lax', // Or 'strict' or 'none' depending on your needs
+            sameSite: 'none', // 'strict' 'none' 'lax'
             maxAge: this.tokenAge // Cookie expiration in milliseconds (e.g., 1 hour)
         });
 
@@ -81,7 +79,7 @@ export class AuthController {
         res.cookie('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax',
+            sameSite: 'none',
             maxAge: this.tokenAge
         });
 
