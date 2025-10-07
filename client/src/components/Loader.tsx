@@ -1,8 +1,14 @@
 import type { JSX } from "react";
 
-export default function Loader(): JSX.Element {
+interface Props {
+    title?: string
+}
+
+export default function Loader({
+    title = "Loading..."
+}: Props): JSX.Element {
     return <div className='loading'>
         <div className='loader'></div>
-        <span>Loading...</span>
+        <span>{title}</span>
     </div>
 }

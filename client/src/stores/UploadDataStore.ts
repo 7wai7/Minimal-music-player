@@ -25,5 +25,5 @@ export const useUploadDataStore = create<UploadData>((set, get) => ({
     filesForm: {},
     setFilesForm: (field, value) => set({ filesForm: { ...get().filesForm, [field]: value } }),
     
-    clearForm: () => set({ uploadForm: {} }),
+    clearForm: () => set({ uploadForm: {}, filesForm: {} }),
 }));

@@ -6,6 +6,8 @@ import { useUploadDataStore } from "../../stores/UploadDataStore";
 import { Input, Textarea } from "../ui/Input";
 import { uploadSongFetch } from "../../API/songs";
 import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import Loader from "../Loader";
 
 function UploadModal() {
     const clearForm = useUploadDataStore(s => s.clearForm);
@@ -13,6 +15,7 @@ function UploadModal() {
         errors,
         showErrors
     } = useFieldErrors();
+    const [isFetching, setIsFetching] = useState(false);
 
     const queryClient = useQueryClient();
 
@@ -26,6 +29,9 @@ function UploadModal() {
 
     const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        if (isFetching) return;
+        setIsFetching(true);
+
         const { file, fileImg } = useUploadDataStore.getState().filesForm;
 
         if (!file) return;
@@ -48,47 +54,70 @@ function UploadModal() {
             .catch(err => {
                 showErrors(err.errors || [])
             })
+            .finally(() => setIsFetching(false))
     }
 
     return (
-        <form className="upload-form" onSubmit={submitHandler}>
-            <div className="l">
-                <label className="title-label">Title</label>
-                <Input
-                    store={useUploadDataStore}
-                    selector={(s) => s.uploadForm.title ?? ""}
-                    setField={(store, value) => store.getState().setUploadForm("title", value)}
-                    type="text"
-                    required
-                    className={`title-input ${errors.title ? "error" : ""}`}
-                />
-                {
-                    errors.title && <span className="error-message">{errors.title.message}</span>
-                }
-                <label className="lyrics-label">Lyrics</label>
-                <Textarea
-                    store={useUploadDataStore}
-                    selector={(s) => s.uploadForm.lyrics ?? ""}
-                    setField={(store, value) => store.getState().setUploadForm("lyrics", value)}
-                    name="lyrics"
-                    className={`lyrics-textarea ${errors.lyrics ? "error" : ""}`}
-                />
-                {
-                    errors.lyrics && <span className="error-message">{errors.lyrics.message}</span>
-                }
-            </div>
-            <div className="r">
-                <UploadSongTabs />
-
-                <button
-                    type="submit"
-                    className="submit-btn"
-                >
-                    Upload
-                </button>
-            </div>
-        </form>
+        <>
+            <form className="upload-form" onSubmit={submitHandler}>
+                <div className="l">
+                    <label className="title-label">Title</label>
+                    <Input
+                        store={useUploadDataStore}
+                        selector={(s) => s.uploadForm.title ?? ""}
+                        setField={(store, value) => store.getState().setUploadForm("title", value)}
+                        type="text"
+                        required
+                        className={`title-input ${errors.title ? "error" : ""}`}
+                    />
+                    {
+                        errors.title && <span className="error-message">{errors.title.message}</span>
+                    }
+                    <label className="lyrics-label">Lyrics</label>
+                    <Textarea
+                        store={useUploadDataStore}
+                        selector={(s) => s.uploadForm.lyrics ?? ""}
+                        setField={(store, value) => store.getState().setUploadForm("lyrics", value)}
+                        name="lyrics"
+                        className={`lyrics-textarea ${errors.lyrics ? "error" : ""}`}
+                    />
+                    {
+                        errors.lyrics && <span className="error-message">{errors.lyrics.message}</span>
+                    }
+                </div>
+                <div className="r">
+                    <UploadSongTabs />
+                    <SubmitBtn disabled={isFetching} />
+                </div>
+            </form>
+            {
+                isFetching && (
+                    <div className="is-fetching-modal">
+                        <Loader title="Uploading..." />
+                    </div>
+                )
+            }
+        </>
     );
+}
+
+function SubmitBtn({
+    disabled = false
+}: {
+    disabled: boolean
+}) {
+    const uploadForm = useUploadDataStore(s => s.uploadForm);
+    const filesForm = useUploadDataStore(s => s.filesForm);
+
+    return (
+        <button
+            type="submit"
+            disabled={disabled || !uploadForm.title || !uploadForm.genre || !filesForm.file}
+            className="submit-btn"
+        >
+            Upload
+        </button>
+    )
 }
 
 export default UploadModal;

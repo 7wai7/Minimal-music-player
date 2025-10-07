@@ -116,6 +116,7 @@ export const useAudioStore = create<AudioStore>((set, get) => {
 
             if(key === lastKey) return;
             get().setPlaylist(songs);
+            set({ lastPlaylistKey: key });
         },
 
         playSong: (song) => {
@@ -126,7 +127,7 @@ export const useAudioStore = create<AudioStore>((set, get) => {
             }
 
             audio.pause();
-            audio.src = `/api/audio?url=${song.url}`;
+            audio.src = `${import.meta.env.VITE_API_URL}/api/audio?url=${song.url}`;
             audio.load();
             audio.oncanplay = () => audio.play();
             set({ currentSong: song });
