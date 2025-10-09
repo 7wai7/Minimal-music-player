@@ -139,6 +139,7 @@ body:has(.auth-form) {
 @media (width <=900px) {
     #root:has(.auth-form) {
         padding: 20px;
+        width: 100%;
     }
 
     .auth-form {

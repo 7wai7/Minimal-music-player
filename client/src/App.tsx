@@ -24,11 +24,9 @@ function App() {
 
 	return (
 		<>
-			{
-				!isAuthPage && <Header />
-			}
+			{!isAuthPage && <Header />}
 			<MainBackground />
-			<GlobalModals />
+			{!isAuthPage && <GlobalModals />}
 			<Routes /* location={useNavigationStore.getState().previousLocation || location} */>
 				<Route
 					path="/auth"
