@@ -2,6 +2,10 @@ body:has(.auth-form) {
     overflow: hidden;
 }
 
+#root:has(.auth-form) {
+    width: auto;
+}
+
 .auth-form {
     position: relative;
     display: flex;

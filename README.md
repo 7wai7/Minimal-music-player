@@ -16,7 +16,6 @@
 * Back-end: **Node.js**, **NestJS**, **JWT** аутентифікація, **PostgreSQL**, Google Cloud Storage (зберігання файлів)
 * Front-end: **Vite**, **React**, **Zustand**
 * Документація: **Swagger**
-* Хостинг: сервер — Render, фронтенд — Netlify
 
 ---
 
@@ -30,7 +29,7 @@
 
 ---
 
-## Запуск (коротко)
+## Запуск
 
 ```bash
 # Клонувати репозиторій

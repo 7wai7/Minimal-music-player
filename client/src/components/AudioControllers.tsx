@@ -30,9 +30,9 @@ function AudioControllers({
             </div>
             <Dropdown
                 content={[
-                    <Volume isVertical key={1}/>,
-                    <PlaylistBtn key={2}/>,
-                    <DownloadBtn key={3}/>
+                    <Volume isVertical key={1} />,
+                    <PlaylistBtn key={2} />,
+                    <DownloadBtn key={3} />
                 ]}
             />
         </div>
@@ -45,12 +45,13 @@ function SongMeta({
     showAudioModal: () => void
 }) {
     const currentSong = useAudioStore(s => s.currentSong);
+    const close = useModalStore(s => s.close);
 
     return (
         <>
             {currentSong ? (
                 <div className="meta">
-                    <Link to={`/artist/${currentSong.artist.login}`} className="artist-link">
+                    <Link to={`/artist/${currentSong.artist.login}`} className="artist-link" onClick={() => close()}>
                         {currentSong.artist.login}
                     </Link>
                     <span className="dash">-</span>
@@ -87,10 +88,11 @@ function PlaylistBtn() {
 }
 
 function DownloadBtn() {
+    const currentSong = useAudioStore(s => s.currentSong);
+
     return (
         <button
             onClick={() => {
-                const currentSong = useAudioStore.getState().currentSong;
                 if (currentSong) downloadFile(currentSong.url, currentSong.title);
             }}
             className="download-btn tr-bg icon-wrapper"

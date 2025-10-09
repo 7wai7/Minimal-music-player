@@ -56,7 +56,14 @@ export const useAudioStore = create<AudioStore>((set, get) => {
     };
 
     const updateCanPlay = () => {
-        const playlist = get().playlist;
+        const { playlist, currentSong } = get();
+
+        const index = currentSong ? playlist.findIndex(s => s.id === currentSong.id) : -1;
+        if (index === -1) {
+            set({ canPlayNext: false, canPlayPrev: false });
+            return;
+        }
+        
         set({
             canPlayNext: playlist.length > 1,
             canPlayPrev: playlist.length > 1,
@@ -88,7 +95,7 @@ export const useAudioStore = create<AudioStore>((set, get) => {
 
         setCurrentSong: (song) => set({ currentSong: song }),
         setPlaylist: (songs) => {
-            set({ playlist: songs })
+            set({ playlist: songs });
             updateCanPlay();
         },
         addToPlaylist: (song) => {
@@ -114,7 +121,7 @@ export const useAudioStore = create<AudioStore>((set, get) => {
         setPlaylistByKey(key, songs) {
             const lastKey = get().lastPlaylistKey;
 
-            if(key === lastKey) return;
+            if (key === lastKey) return;
             get().setPlaylist(songs);
             set({ lastPlaylistKey: key });
         },
@@ -131,6 +138,7 @@ export const useAudioStore = create<AudioStore>((set, get) => {
             audio.load();
             audio.oncanplay = () => audio.play();
             set({ currentSong: song });
+            updateCanPlay();
         },
         playNext: () => playNextOrPrev(1),
         playPrev: () => playNextOrPrev(-1),

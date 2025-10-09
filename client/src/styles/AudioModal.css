@@ -1,7 +1,7 @@
 .modal-overlay.audio .modal-content {
     display: flex;
     flex-direction: row;
-    height: inherit;
+    height: 100%;
 }
 
 
