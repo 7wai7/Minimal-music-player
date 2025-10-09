@@ -78,7 +78,8 @@ body:has(.auth-form) {
 .auth-form .global-error {
     align-self: center;
     position: absolute;
-    inset: auto;
+    left: 0;
+    right: 0;
     top: 50%;
 
     height: 40px;
@@ -131,5 +132,25 @@ body:has(.auth-form) {
     to {
         transform: rotate(200deg);
         left: 200%;
+    }
+}
+
+
+@media (width <=900px) {
+    #root:has(.auth-form) {
+        padding: 20px;
+    }
+
+    .auth-form {
+        width: 100%;
+        max-height: calc(100vh - 40px);
+    }
+
+    .auth-form .form-inputs {
+        margin-bottom: 100px;
+    }
+
+    .auth-form .disc-img {
+        display: none;
     }
 }

@@ -12,7 +12,7 @@ import type SongDTO from "../../types/song";
 function AudioModal() {
     const song = useModalStore(state => state.audioSong);
 
-    if (!song) return <p className="placeholder">No song playing</p>
+    if (!song) return <span className="placeholder">No song playing</span>
 
     return <>
         <div className="disc-container">

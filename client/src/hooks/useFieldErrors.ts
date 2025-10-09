@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-type Errors = Record<string, { message: string }>;
+export type Errors = Record<string, { message: string }>;
 
 export default function useFieldErrors() {
     const initialErrors: Errors = {};

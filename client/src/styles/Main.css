@@ -1,7 +1,3 @@
-.page-content {
-    min-height: 100vh;
-}
-
 .artists-title,
 .songs-title {
     color: white;
@@ -10,11 +6,7 @@
 }
 
 .songs-title {
-    margin: 20px 20px 20px;
-}
-
-.artists-list-wrapper {
-    overflow-x: hidden;
+    margin: 50px 20px 20px;
 }
 
 .artists-container,
@@ -24,6 +16,7 @@
 }
 
 .artists-container {
+    overflow-x: auto;
     flex-direction: row;
     gap: 40px;
 }

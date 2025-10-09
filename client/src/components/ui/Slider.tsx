@@ -39,6 +39,7 @@ function Slider({
             onChange={handleChange}
             style={sliderStyle}
             className={className}
+            onTouchMove={(e) => e.stopPropagation()}
         />
     );
 }

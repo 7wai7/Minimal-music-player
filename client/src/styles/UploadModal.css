@@ -18,7 +18,7 @@
     background: none;
 }
 
-.upload-form .l {
+.upload-form .title-lyrics-form {
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -58,7 +58,7 @@
     background-color: var(--theme-3);
 }
 
-.upload-form .r {
+.upload-form .right-panel {
     width: 260px;
     display: flex;
     flex-direction: column;
@@ -171,4 +171,18 @@
     align-items: center;
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.2);
+}
+
+
+
+
+
+@media (width <=700px) {
+    .upload-form {
+        gap: 10px;
+    }
+
+    .upload-form .right-panel {
+        width: 100%;
+    }
 }

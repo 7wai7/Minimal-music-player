@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect } from "react";
+import { memo, useCallback, useEffect, type JSX } from "react";
 import { useDragAndDrop } from "../hooks/useDragAndDrop";
 import formatBytes from "../utils/formatBytes";
 import formatDuration from "../utils/formatDuration";
@@ -8,7 +8,13 @@ import { useUploadDataStore } from "../stores/UploadDataStore";
 import { Input } from "./ui/Input";
 import getAudioDuration from "../utils/getAudioDuration";
 
-function UploadSongTabs() {
+interface Props {
+    titleLyricsForm?: JSX.Element
+}
+
+function UploadSongTabs({
+    titleLyricsForm
+}: Props) {
     const setUploadForm = useUploadDataStore(s => s.setUploadForm);
     const setFilesForm = useUploadDataStore(s => s.setFilesForm);
     const file = useUploadDataStore(s => s.filesForm.file);
@@ -97,6 +103,14 @@ function UploadSongTabs() {
 
             <Tabs
                 tabs={[
+                    ...(titleLyricsForm
+                        ? [{
+                            navBtn: <button type="button">
+                                Title
+                            </button>,
+                            content: titleLyricsForm
+                        }]
+                        : []),
                     {
                         navBtn: <button type="button">
                             Sound file

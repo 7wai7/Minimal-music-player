@@ -1,15 +1,20 @@
 import './App.css'
 import MainBackground from './components/MainBackground'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
 import Auth from './pages/Auth'
 import { useUser } from './contexts/userContext';
 import Main from './pages/Main';
 import Layout from './pages/Layout';
 import Artist from './pages/Artist';
 import GlobalModals from './components/GlobalModals';
+import Header from './components/Header';
+import Footer from './components/Footer';
 
 function App() {
 	const { user } = useUser();
+	const location = useLocation();
+
+	const isAuthPage = location.pathname.startsWith('/auth');
 
 
 	// useEffect(() => {
@@ -19,6 +24,9 @@ function App() {
 
 	return (
 		<>
+			{
+				!isAuthPage && <Header />
+			}
 			<MainBackground />
 			<GlobalModals />
 			<Routes /* location={useNavigationStore.getState().previousLocation || location} */>
@@ -56,6 +64,9 @@ function App() {
 					}
 				</Route>
 			</Routes>
+			{
+				!isAuthPage && <Footer />
+			}
 		</>
 	)
 }

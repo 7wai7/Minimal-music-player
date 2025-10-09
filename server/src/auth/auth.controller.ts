@@ -45,7 +45,7 @@ export class AuthController {
         res.cookie('token', token, {
             httpOnly: true, // Prevents client-side JavaScript access
             secure: process.env.NODE_ENV === 'production', // Use secure in production (HTTPS)
-            sameSite: 'none', // 'strict' 'none' 'lax'
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
             maxAge: this.tokenAge // Cookie expiration in milliseconds (e.g., 1 hour)
         });
 
@@ -79,7 +79,7 @@ export class AuthController {
         res.cookie('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'none',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
             maxAge: this.tokenAge
         });
 

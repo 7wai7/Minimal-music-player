@@ -3,7 +3,7 @@
   line-height: 1.5;
   font-weight: 400;
 
-  --page-width: 1000px;
+  --page-width: 70vw;
   --header-height: 70px;
   --footer-height: 90px;
   --bg: #111828;
@@ -24,6 +24,7 @@
 * {
   margin: 0;
   box-sizing: border-box;
+  /* background: rgb(0 100 0 / 0.05) !important; */
 }
 
 a {
@@ -36,4 +37,24 @@ button {
   border: none;
   cursor: pointer;
   padding: 0;
+}
+
+span {
+  white-space: nowrap;
+}
+
+input[type=range].vertical {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  width: 100px;
+  transform: rotate(-90deg);
+  transform-origin: left;
+}
+
+
+@media (width <=900px) {
+  :root {
+    --page-width: 100vw
+  }
 }

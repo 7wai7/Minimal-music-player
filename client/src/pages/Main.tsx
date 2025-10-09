@@ -7,9 +7,7 @@ function Main() {
     return (
         <>
             <h2 className="artists-title">Popular artists</h2>
-            <div className="artists-list-wrapper">
-                <ArtistsContainer />
-            </div>
+            <ArtistsContainer />
             <h2 className="songs-title">Popular songs</h2>
             <div className="songs-list-wrapper">
                 <SongsContainer

@@ -2,7 +2,13 @@ import { Volume as Volume0, Volume1, Volume2, VolumeOff } from "lucide-react";
 import Slider from "./ui/Slider";
 import { useAudioStore } from "../stores/AudioStore";
 
-function Volume() {
+interface Props {
+    isVertical?: boolean
+}
+
+function Volume({
+    isVertical = false
+}: Props) {
     const volume = useAudioStore(state => state.volume);
     const handleVolume = useAudioStore(state => state.handleVolume);
     const isMuted = useAudioStore(state => state.isMuted);
@@ -26,7 +32,7 @@ function Volume() {
                 <Icon size={18} color="var(--theme-3-light)" />
             </button>
             <Slider
-                className="volume-slider"
+                className={`volume-slider ${isVertical ? "vertical" : ""}`}
                 max={1}
                 step={0.01}
                 value={volume}

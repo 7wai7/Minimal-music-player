@@ -1,9 +1,9 @@
 header {
-    position: fixed;
+    position: sticky;
+    top: 0;
     display: flex;
     align-items: center;
     z-index: 1000;
-    width: var(--page-width);
     padding: 0 20px;
     height: var(--header-height);
     background: #1e2736d8;

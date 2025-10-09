@@ -1,11 +1,10 @@
 footer {
-    position: fixed;
+    position: sticky;
     bottom: 0;
     z-index: 1000;
-    width: var(--page-width);
     height: var(--footer-height);
-    box-shadow: inset 0 2px 1px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(255, 255, 255, 0.15);
     background: #1e2736d8;
+    container-type: inline-size;
     display: flex;
     flex-direction: column;
     padding-bottom: 10px;
@@ -34,7 +33,6 @@ footer {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
     margin: auto 0;
     padding: 0 10px;
 }
@@ -71,7 +69,7 @@ footer {
 
 
 .volume-wrapper {
-    margin-left: 20px;
+    margin: 0 20px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -83,7 +81,10 @@ footer {
 .audio-controllers .meta {
     display: flex;
     align-items: end;
+    justify-content: center;
     gap: 0.5rem;
+    flex: 1;
+    overflow: hidden;
 }
 
 .audio-controllers .meta * {
@@ -93,13 +94,23 @@ footer {
     vertical-align: baseline;
 }
 
-.audio-controllers .meta .song-title {
+.audio-controllers .song-title {
     color: var(--theme);
     font-size: 16px;
     vertical-align: baseline;
 }
 
+.audio-controllers .artist-link,
+.audio-controllers .song-title {
+    flex-shrink: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .audio-controllers .placeholder {
+    text-align: center;
+    flex: 1;
     color: white;
     font-size: 16px;
 }
@@ -114,6 +125,25 @@ footer {
 
 
 
+footer .dropdown {
+    display: none;
+}
+
+footer .dropdown-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 120px;
+}
+
+footer .dropdown .volume-wrapper {
+    position: relative;
+    margin: 0;
+}
+
+footer .dropdown .volume-slider {
+    width: 100px;
+}
 
 
 footer button[disabled] {
@@ -125,4 +155,45 @@ footer.disabled input:not(.playlist-btn):not(.volume-wrapper input),
 footer.disabled button:not(.playlist-btn):not(.volume-wrapper button) {
     opacity: 0.5;
     pointer-events: none;
+}
+
+
+@media (width < 770px) {
+
+    footer .artist-link,
+    footer .dash {
+        display: none !important;
+    }
+}
+
+
+@media (width < 570px) {
+    footer .meta {
+        display: none !important;
+    }
+
+    footer .audio-controllers {
+        justify-content: space-between;
+    }
+
+    footer .placeholder {
+        display: none !important;
+    }
+}
+
+@media (width < 500px) {
+    footer .audio-controllers {
+        justify-content: center;
+    }
+
+    footer .dropdown {
+        position: absolute;
+        right: 20px;
+        display: block;
+    }
+
+    footer .audio-btns .volume-wrapper,
+    footer .right-block {
+        display: none !important;
+    }
 }

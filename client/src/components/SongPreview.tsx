@@ -85,8 +85,7 @@ function SongPreview({
 
     return (
         <div ref={ref} className={`song-preview tr-bg`} onClick={onClick}>
-            <div className="block-l">
-                {/* {
+            {/* {
                     isPlaylistModal && (
                         <div
                             className="drag-btn icon-wrapper"
@@ -98,33 +97,31 @@ function SongPreview({
                         </div>
                     )
                 } */}
-                <PlayPauseBtnPreview
-                    song={song}
-                    onClick={() => {
-                        if(listKey && list && list.length > 0) {
-                            setPlaylistByKey(listKey, list);
-                        }
-                    }}
-                />
-                <div className="meta">
-                    {
-                        (
-                            !location.pathname.startsWith('/artist') ||
-                            isPlaylistModal
-                        ) &&
-                        <>
-                            <Link to={`/artist/${song.artist.login}`}>
-                                {song.artist.login}
-                            </Link>
-                            <span>-</span>
-                        </>
+            <PlayPauseBtnPreview
+                song={song}
+                onClick={() => {
+                    if (listKey && list && list.length > 0) {
+                        setPlaylistByKey(listKey, list);
                     }
-                    <span className="song-title">{song.title}</span>
-                </div>
-            </div>
-            <div className="block-r">
-                <span>{new Date(song.release_date).toLocaleDateString()}</span>
-                <span>{formatBytes(song.size)}</span>
+                }}
+            />
+            {
+                (
+                    !location.pathname.startsWith('/artist') ||
+                    isPlaylistModal
+                ) &&
+                <>
+                    <Link to={`/artist/${song.artist.login}`} className="meta artist-link">
+                        {song.artist.login}
+                    </Link>
+                    <span className="meta">-</span>
+                </>
+            }
+            <span className="meta song-title">{song.title}</span>
+
+            <div className="right-panel">
+                <span className="release-date">{new Date(song.release_date).toLocaleDateString()}</span>
+                <span className="size">{formatBytes(song.size)}</span>
                 <span className="duration">{formatDuration(song.duration)}</span>
                 {
                     !isPlaylistModal && (
