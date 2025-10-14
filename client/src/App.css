@@ -128,10 +128,6 @@ body {
   }
 }
 
-.avatar-wrapper {
-  width: 100px !important;
-}
-
 .avatar-wrapper.default {
   background-color: #3a83f2;
 }
@@ -159,19 +155,17 @@ body {
 
 
 .preview-img-wrapper {
-  width: inherit;
   position: relative;
   aspect-ratio: 1 / 1;
   border-radius: 50%;
   overflow: hidden;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .preview-img {
+  width: 100%;
   height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 .preview-cover {

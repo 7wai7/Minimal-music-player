@@ -15,7 +15,7 @@ export default function Img({
     const [src, setSrc] = useState(defaultUrl);
 
     useEffect(() => {
-        if (!fileUrl) return setSrc(defaultUrl);
+        if (!fileUrl) return;
 
         let cancelled = false;
 

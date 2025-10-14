@@ -9,6 +9,7 @@ interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
     fallbackIcon?: JSX.Element;    // Можливість передати свою fallback-іконку
     linkTo?: string;               // Якщо передано — аватар стає посиланням
     className?: string;            // Додаткові класи
+    changeCover?: JSX.Element;
 }
 
 export default function Avatar({
@@ -17,24 +18,31 @@ export default function Avatar({
     fallbackIcon = <UserIcon size="40%" color="var(--theme-2)" />,
     linkTo,
     className = "",
+    changeCover,
     ...props
 }: AvatarProps): JSX.Element {
-    const [error, setError] = useState(!src);
+    const [error, setError] = useState(false);
 
     const content = (
         <div
-            className={`preview-img-wrapper avatar-wrapper ${error ? "icon-wrapper default" : ""} ${className}`}
+            className={`preview-img-wrapper avatar-wrapper ${error || !src ? "icon-wrapper default" : ""} ${className}`}
             {...props}
         >
             {!error && src ? (
-                <Img
-                    fileUrl={src}
-                    alt={alt}
-                    className="avatar preview-img"
-                    onError={() => setError(true)}
-                />
+                <>
+                    <Img
+                        fileUrl={src}
+                        alt={alt}
+                        className="avatar preview-img"
+                        onError={() => setError(true)}
+                    />
+                    {changeCover}
+                </>
             ) : (
-                fallbackIcon
+                <>
+                    {fallbackIcon}
+                    {changeCover}
+                </>
             )}
         </div>
     );

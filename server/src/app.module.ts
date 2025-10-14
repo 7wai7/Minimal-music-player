@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import * as dotenv from 'dotenv';
@@ -10,6 +10,8 @@ import { SongsModule } from './songs/songs.module';
 import { JwtModule } from '@nestjs/jwt';
 import { StorageModule } from './storage/storage.module';
 import { Profile } from './models/profile.model';
+import { JwtMiddleware } from './auth/jwt-auth.middleware';
+import { AuthModule } from './auth/auth.module';
 dotenv.config();
 
 @Module({
@@ -33,9 +35,14 @@ dotenv.config();
 		UsersModule,
 		SongsModule,
 		JwtModule,
+		AuthModule,
 		StorageModule
 	],
 	controllers: [AppController],
 	providers: [AppService],
 })
-export class AppModule { }
+export class AppModule implements NestModule {
+	configure(consumer: MiddlewareConsumer) {
+		consumer.apply(JwtMiddleware).forRoutes('*');
+	}
+}

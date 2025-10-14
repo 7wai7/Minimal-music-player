@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { AppService } from './app.service';
-import { JwtAuthGuard } from './auth/jwt-auth.quard';
+import { AuthGuard } from './auth/auth.quard';
 import { ReqUser } from './decorators/ReqUser';
 import { UserDto } from './users/dto/user.dto';
 import type { Request } from 'express';
@@ -23,7 +23,7 @@ export class AppController {
     @ApiResponse({ status: 200, description: 'Search results returned successfully.' })
     @ApiResponse({ status: 401, description: 'Unauthorized.' })
     @Get('/search')
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(AuthGuard)
     search(@Param('searchTerm') searchTerm: string, @ReqUser() user: UserDto) {
         return this.appService.search(user.id, searchTerm);
     }

@@ -1,14 +1,13 @@
-import { Body, Controller, Get, Post, Res, UnauthorizedException, UseFilters, UseGuards } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { Body, Controller, Get, Post, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { ApiOperation } from '@nestjs/swagger';
 import type { Response } from 'express';
-import { ApiBody, ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { LoginUserDto } from './dto/login-user.dto';
-import { ValidationDto } from './dto/validation-dto';
-import { RegisterUserDto } from './dto/register-user.dto';
-import { UserDto } from 'src/users/dto/user.dto';
 import { ReqUser } from 'src/decorators/ReqUser';
-import { Auth } from 'src/decorators/Auth';
-import { JwtAuthGuard } from './jwt-auth.quard';
+import { ApiLogin, ApiRegister } from 'src/docs/auth.decorators';
+import { UserDto } from 'src/users/dto/user.dto';
+import { AuthGuard } from './auth.quard';
+import { AuthService } from './auth.service';
+import { LoginUserDto } from './dto/login-user.dto';
+import { RegisterUserDto } from './dto/register-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -19,24 +18,7 @@ export class AuthController {
     }
 
 
-    @ApiOperation({
-        summary: 'Вхід користувача в систему',
-        description: 'Аутентифікація користувача за допомогою логіну та паролю. Повертає JWT токен у httpOnly cookie та дані користувача.'
-    })
-    @ApiBody({
-        description: 'Дані для входу користувача',
-        type: LoginUserDto
-    })
-    @ApiResponse({
-        status: 200,
-        description: 'Успішний вхід в систему',
-        type: UserDto
-    })
-    @ApiResponse({
-        status: 400,
-        description: 'Помилка валідації даних',
-        type: [ValidationDto]
-    })
+    @ApiLogin()
     @Post("/login")
     async login(@Body() userDto: LoginUserDto, @Res() res: Response) {
         const { token, user } = await this.authService.login(userDto);
@@ -54,24 +36,7 @@ export class AuthController {
 
 
 
-    @ApiOperation({
-        summary: 'Реєстрація користувача в систему',
-        description: 'Аутентифікація користувача за допомогою логіну/email та паролю. Повертає JWT токен у httpOnly cookie та дані користувача.'
-    })
-    @ApiBody({
-        description: 'Дані для реєстрації користувача',
-        type: RegisterUserDto
-    })
-    @ApiResponse({
-        status: 200,
-        description: 'Успішна реєстрація',
-        type: UserDto
-    })
-    @ApiResponse({
-        status: 400,
-        description: 'Помилка валідації даних',
-        type: [ValidationDto]
-    })
+    @ApiRegister()
     @Post("/register")
     async register(@Body() userDto: RegisterUserDto, @Res() res: Response) {
         const { token, user } = await this.authService.register(userDto);
@@ -96,8 +61,7 @@ export class AuthController {
     }
 
 
-    @UseGuards(JwtAuthGuard)
-    @Auth({ required: false })
+    @UseGuards(AuthGuard)
     @Get('/me')
     me(@ReqUser() user: UserDto) {
         if (user) return {

@@ -1,24 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { RegisterUserDto } from 'src/auth/dto/register-user.dto';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.quard';
-import { ReqUser } from 'src/decorators/ReqUser';
-import { UserDto } from './dto/user.dto';
-import { ApiTags, ApiOperation, ApiParam, ApiBearerAuth, ApiBody, ApiResponse } from '@nestjs/swagger';
-import { Auth } from 'src/decorators/Auth';
+import { Controller, Get, Param, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { AuthGuard } from 'src/auth/auth.quard';
+import { ReqUser } from 'src/decorators/ReqUser';
+import { ApiChangeAvatarDocs, ApiFindUsersByLoginDocs, ApiGetUserByIdDocs, ApiGetUserByLoginDocs, ApiGetUsersDocs } from 'src/docs/users.decorators';
+import { UserDto } from './dto/user.dto';
+import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
 	constructor(private readonly usersService: UsersService) { }
 
-	@ApiOperation({ summary: 'Get user by ID' })
-	@ApiParam({ name: 'id', type: Number, description: 'User ID' })
-	@ApiResponse({
-		status: 200,
-		description: 'The user has been successfully retrieved.',
-		type: UserDto
-	})
+	@ApiGetUserByIdDocs()
 	@Get("/id/:id")
 	findOne(
 		@Param('id') id: string
@@ -26,15 +18,7 @@ export class UsersController {
 		return this.usersService.findOne({ id: +id });
 	}
 
-	@ApiOperation({ summary: 'Get user by login' })
-	@ApiParam({ name: 'login', type: String, description: 'User login' })
-	@ApiResponse({
-		status: 200,
-		description: 'The user has been successfully retrieved.',
-		type: UserDto
-	})
-	@UseGuards(JwtAuthGuard)
-	@Auth({ required: false })
+	@ApiGetUserByLoginDocs()
 	@Get('/by-login/:login')
 	findOneByLogin(
 		@Param('login') login: string,
@@ -43,27 +27,13 @@ export class UsersController {
 		return this.usersService.findOneAndCountSongs(user?.id, { login });
 	}
 
-	@ApiOperation({ summary: 'Get users' })
-	@ApiParam({ name: 'limit', type: Number })
-	@ApiResponse({
-		status: 200,
-		description: 'The users has been successfully retrieved.',
-		type: [UserDto]
-	})
+	@ApiGetUsersDocs()
 	@Get()
 	findMany(@Param('limit') limit?: string) {
 		return this.usersService.findMany({}, limit ? +limit : 10);
 	}
 
-	@ApiOperation({ summary: 'Find users by login' })
-	@ApiBearerAuth()
-	@ApiParam({ name: 'login', type: String, description: 'User login', required: false })
-	@ApiResponse({
-		status: 200,
-		description: 'List of users matching the login',
-		type: UserDto
-	})
-	@UseGuards(JwtAuthGuard)
+	@ApiFindUsersByLoginDocs()
 	@Get('find/by-login')
 	findUsersByLogin(@ReqUser() user: UserDto, @Param('login') login: string) {
 		return this.usersService.findUsersByLogin(user.id, login);
@@ -71,9 +41,9 @@ export class UsersController {
 
 
 
-
+	@ApiChangeAvatarDocs()
 	@Post("/change-avatar")
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(AuthGuard)
 	@UseInterceptors(FileInterceptor('file'))
 	uploadAndCreate(
 		@ReqUser() user: UserDto,

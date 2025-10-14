@@ -91,29 +91,31 @@ function ArtistAvatar({
     };
 
     return (
-        <div className="preview-img-wrapper">
-            <Avatar
-                src={avatarUrl}
-                alt={artist.login}
-            />
-            {
-                artist.isOwnProfile && (
-                    <>
-                        <input
-                            type="file"
-                            accept="image/*"
-                            ref={fileInputRef}
-                            className="hidden"
-                            onChange={changeHandler}
-                        />
+        <Avatar
+            src={avatarUrl}
+            alt={artist.login}
+            changeCover={
+                <>
+                    {
+                        artist.isOwnProfile && (
+                            <>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    ref={fileInputRef}
+                                    className="hidden"
+                                    onChange={changeHandler}
+                                />
 
-                        <button className="preview-cover" onClick={openFileDialog}>
-                            Change image
-                        </button>
-                    </>
-                )
+                                <button className="preview-cover" onClick={openFileDialog}>
+                                    Change image
+                                </button>
+                            </>
+                        )
+                    }
+                </>
             }
-        </div>
+        />
     )
 }
 

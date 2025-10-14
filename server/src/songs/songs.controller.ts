@@ -1,79 +1,30 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UseInterceptors, UploadedFile, Query, HttpException, HttpStatus, UploadedFiles } from '@nestjs/common';
-import { SongsService } from './songs.service';
-import { CreateSongDto } from './dto/create-song.dto';
+import { Body, Controller, Get, HttpException, HttpStatus, Param, Post, Query, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { AuthGuard } from 'src/auth/auth.quard';
 import { ReqUser } from 'src/decorators/ReqUser';
+import { ApiGetByArtist, ApiGetSongById, ApiGetSongs, ApiUploadAndCreate } from 'src/docs/songs.decorators';
 import { UserDto } from 'src/users/dto/user.dto';
-import { ApiBody, ApiConsumes, ApiOperation, ApiQuery, ApiResponse, getSchemaPath } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.quard';
-import { FileFieldsInterceptor, FileInterceptor } from '@nestjs/platform-express';
-import { UploadSongDto } from './dto/upload-song.dto';
-import { Auth } from 'src/decorators/Auth';
-import { Op } from 'sequelize';
 import clean from 'src/utils/clean';
-import { SongDto } from './dto/song.dto';
+import { UploadSongDto } from './dto/upload-song.dto';
+import { SongsService } from './songs.service';
 
 @Controller('songs')
 export class SongsController {
 	constructor(private readonly songsService: SongsService) { }
 
-	@ApiOperation({ summary: 'Find song' })
-	@ApiResponse({ status: 200, description: 'The song has been successfully retrieved.' })
-	@UseGuards(JwtAuthGuard)
-	@Auth({ required: false })
+	@ApiGetSongById()
 	@Get('/by-id/:id')
 	findOne(@Param('id') id: string, @ReqUser() user?: UserDto) {
 		return this.songsService.findOne(user?.id ?? null, { id: +id });
 	}
 
-	@ApiOperation({ summary: 'Find songs' })
-	@ApiResponse({ status: 200, description: 'The songs has been successfully retrieved.' })
-	@UseGuards(JwtAuthGuard)
-	@Auth({ required: false })
+	@ApiGetSongs()
 	@Get()
 	findMany(@Param('limit') limit?: string, @ReqUser() user?: UserDto) {
 		return this.songsService.findMany(user?.id ?? null, {}, limit ? +limit : 10);
 	}
 
-	@ApiOperation({ summary: 'Find songs' })
-	@ApiQuery({
-		name: 'page',
-		type: 'number',
-		example: '1'
-	})
-	@ApiQuery({
-		name: 'id',
-		type: 'number',
-		example: '1',
-		required: false
-	})
-	@ApiQuery({
-		name: 'login',
-		type: 'string',
-		example: 'user',
-		required: false
-	})
-	@ApiQuery({
-		name: 'limit',
-		type: 'number',
-		example: '10',
-		required: false
-	})
-	@ApiResponse({
-		status: 200,
-		description: 'The songs has been successfully retrieved.',
-		schema: {
-			type: 'object',
-			properties: {
-				count: { type: 'number', example: 100 },
-				rows: {
-					type: 'array',
-					items: { $ref: getSchemaPath(SongDto) }
-				}
-			}
-		}
-	})
-	@UseGuards(JwtAuthGuard)
-	@Auth({ required: false })
+	@ApiGetByArtist()
 	@Get('/artist')
 	findManyByArtist(
 		@Query('page') page: string,
@@ -96,30 +47,9 @@ export class SongsController {
 		);
 	}
 
-	@ApiOperation({ summary: 'Upload and create a new song with audio file' })
-	@ApiResponse({ status: 201, description: 'The song has been successfully uploaded and created.' })
-	@ApiResponse({ status: 400, description: 'Invalid file type.' })
-	@ApiConsumes('multipart/form-data')
-	@ApiBody({
-		description: 'Form data for creating a song and uploading an audio file',
-		schema: {
-			type: 'object',
-			properties: {
-				title: { type: 'string', description: 'Song title', example: "My Song" },
-				lyrics: { type: 'string', description: 'Song lyrics', example: "These are the song lyrics..." },
-				release_date: { type: 'string', format: 'date', description: 'Release date of the song', example: new Date().toISOString() },
-				genre: { type: 'string', description: 'Genre of the song', example: "Pop" },
-				file: {
-					type: 'string',
-					format: 'binary',
-					description: 'Audio file to upload'
-				}
-			},
-			required: ['file', 'title', 'genre']
-		}
-	})
+	@ApiUploadAndCreate()
 	@Post("/upload-and-create")
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(AuthGuard)
 	@UseInterceptors(
 		FileFieldsInterceptor([
 			{ name: 'file', maxCount: 1 },
@@ -147,14 +77,4 @@ export class SongsController {
 		}
 		return this.songsService.uploadAndCreate(user.id, createSongDto, file, file_preview);
 	}
-
-	// @ApiOperation({ summary: 'Create a new song' })
-	// @ApiResponse({ status: 201, description: 'The song has been successfully created.' })
-	// @ApiResponse({ status: 400, description: 'Bad Request.' })
-	// @ApiBody({ type: CreateSongDto })
-	// @UseGuards(JwtAuthGuard)
-	// @Post()
-	// create(@Body() createSongDto: CreateSongDto, @ReqUser() user: UserDto) {
-	// 	return this.songsService.create({ ...createSongDto, artist_id: user.id });
-	// }
 }

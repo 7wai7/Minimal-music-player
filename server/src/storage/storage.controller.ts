@@ -1,7 +1,7 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Param, Post, Query, UploadedFile, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { StorageService } from './storage.service';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.quard';
+import { AuthGuard } from 'src/auth/auth.quard';
 import { ApiBody, ApiConsumes, ApiCookieAuth, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
 
 @Controller('storage')
@@ -119,7 +119,7 @@ export class StorageController {
     })
     @ApiCookieAuth('token')
     @Post("/upload")
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(AuthGuard)
     @UseInterceptors(FilesInterceptor('files'))
     async upload(@Body() body: { filesToDeleteUrls?: string, }, @UploadedFiles() files: Array<Express.Multer.File>) {
         if (body.filesToDeleteUrls) {

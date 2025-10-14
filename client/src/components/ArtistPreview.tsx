@@ -17,8 +17,8 @@ function ArtistPreview({
                 alt={artist.login}
                 linkTo={`/artist/${artist.login}`}
             />
-            <Link to={`/artist/${artist.login}`}>
-                <span className="title">{artist.login}</span>
+            <Link to={`/artist/${artist.login}`} className="title">
+                <span>{artist.login}</span>
             </Link>
         </div>
     );
